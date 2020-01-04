@@ -3,9 +3,13 @@
 
 int main() {
 
-	FastaFile file("../data/Bioinfo_19_20_train_data/ecoli.fasta");
-	file.open();
+    FastaFile file("../data/Bioinfo_19_20_train_data/ecoli.fasta");
+    file.open();
 
-	std::cout << "Hello World" << std::endl;
-	file.close();
+    while (file.hasNextRecord()) {
+        std::cout << "New record" << std::endl;
+        std::cout << file.getNextRecord() << std::endl;
+    }
+
+    file.close();
 }

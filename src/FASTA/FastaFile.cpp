@@ -4,7 +4,9 @@
 
 FastaFile::FastaFile(const std::string& filename)
     : filename_(filename),
-      opened_(false)
+      opened_(false),
+      has_next_record_(false),
+      next_header_()
 {}
 
 FastaFile::~FastaFile() {
@@ -21,6 +23,8 @@ bool FastaFile::open() {
 
     opened_ = true;
 
+    readHeader();
+
     return true;
 }
 
@@ -34,3 +38,44 @@ void FastaFile::close() {
     opened_ = false;
 }
 
+void FastaFile::readHeader() {
+
+    std::string line;
+    while( std::getline( file_stream_, line ).good()) {
+
+        if (line[0] == '>') {
+            next_header_ = line.substr(1);
+            has_next_record_ = true;
+            break;
+        }
+    }
+}
+
+bool FastaFile::hasNextRecord() {
+    return has_next_record_;
+}
+
+FastaRecord FastaFile::getNextRecord() {
+
+    if (! has_next_record_) {
+        throw std::out_of_range("No more records");
+    }
+
+    FastaRecord record;
+    record.setHeader(next_header_);
+    has_next_record_ = false;
+
+    std::string line;
+    while( std::getline( file_stream_, line ).good()) {
+
+        if (line[0] == '>') {
+            next_header_ = line;
+            has_next_record_ = true;
+            break;
+        }
+
+        record.extendSequence(line);
+    }
+
+    return record;
+}
