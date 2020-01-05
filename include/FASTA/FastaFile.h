@@ -7,7 +7,6 @@ class FastaFile {
 private:
     std::string filename_;
     std::ifstream file_stream_;
-    bool opened_;
 
     bool has_next_record_;
     std::string next_header_;

@@ -4,10 +4,11 @@
 
 FastaFile::FastaFile(const std::string& filename)
     : filename_(filename),
-      opened_(false),
       has_next_record_(false),
       next_header_()
-{}
+{
+    open();
+}
 
 FastaFile::~FastaFile() {
     close();
@@ -21,7 +22,6 @@ bool FastaFile::open() {
         return false;
     }
 
-    opened_ = true;
 
     readHeader();
 
@@ -30,12 +30,11 @@ bool FastaFile::open() {
 
 void FastaFile::close() {
 
-    if (! opened_) {
+    if (! file_stream_.is_open()) {
         return;
     }
 
     file_stream_.close();
-    opened_ = false;
 }
 
 void FastaFile::readHeader() {
@@ -52,10 +51,20 @@ void FastaFile::readHeader() {
 }
 
 bool FastaFile::hasNextRecord() {
+
+    // if file is closed warn user
+    if (! file_stream_.is_open()) {
+        std::cout << "WARNNING: File is closed" << std::endl;
+    }
+
     return has_next_record_;
 }
 
 FastaRecord FastaFile::getNextRecord() {
+
+    if (!file_stream_.is_open()) {
+        throw std::runtime_error("File is closed");
+    }
 
     if (! has_next_record_) {
         throw std::out_of_range("No more records");
