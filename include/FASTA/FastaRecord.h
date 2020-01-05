@@ -1,6 +1,13 @@
 #include <vector>
 #include <string>
 
+/**
+ * @brief Class that describes one record in Fasta file
+ *
+ * Fasta file Record. Contains header marked by > in fasta file
+ * and sequence of data.
+ *
+ */
 class FastaRecord {
 
 public:
@@ -11,7 +18,19 @@ public:
     FastaRecord();
     FastaRecord(const FastaRecord &) = default;
 
+    /**
+     * @brief Set the header of record
+     *
+     * @param header - string value of header
+     */
     void setHeader(const std::string& header);
+
+    /**
+     * @brief extends records sequence by appending provided sequence to existing
+     *
+     * @param sequence - sequence to be appended to record's sequence
+     *
+     */
     void extendSequence(const std::string& sequence);
 
     std::vector<std::string> getMinimizers(short k, short w);

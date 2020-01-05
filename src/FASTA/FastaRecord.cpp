@@ -50,6 +50,7 @@ std::vector<std::string> FastaRecord::getMinimizers(short k, short w) {
 }
 
 std::ostream& operator<<(std::ostream &strm, const FastaRecord &record) {
+    // string representation of object (only first 40 letters of sequence are printed)
     strm << record.header_ << std::endl;
     strm << record.sequence_.substr(0, 40) << "...";
     return strm;
