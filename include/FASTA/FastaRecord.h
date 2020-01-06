@@ -33,6 +33,24 @@ public:
      */
     void extendSequence(const std::string& sequence);
 
+
+    /**
+     * @brief Computes and returns vector of k-mer minimizers from record's attribute
+     * sequence_.
+     *
+     * Computes and returns vector of k-mer minimizers from record's attribute sequence_.
+     * Minimizers are uniquely chosen representative k-mers from a group of adjacent k-mers. Thus,
+     * each minimizer represents one sequence's window. By using minimizers, memory usage can be
+     * reduced significantly.
+     *
+     * Having w <= k guarantees that no gaps appear between adjacent minimizers.
+     *
+     * @param k size of a k-mer
+     * @param w number of consecutive adjacent k-mers in a window.
+     * @return std::vector<std::string> adjacent sequence's minimizers
+     *
+     * @see https://academic.oup.com/bioinformatics/article/20/18/3363/202143
+     */
     std::vector<std::string> getMinimizers(short k, short w);
 
     FastaRecord& operator=(const FastaRecord &) = default;

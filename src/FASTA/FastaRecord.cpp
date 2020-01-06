@@ -15,6 +15,10 @@ void FastaRecord::extendSequence(const std::string& sequence) {
     sequence_ += sequence;
 }
 
+// The main part of the function are two nested loops. Outer while loop iterates through
+// sequence with consecutive windows, while inner for loop iterates through given windows and
+// computes k-mers. At the end of the inner loop a minimizers is found for a given window.
+// In both cases consecutive means shifted by one.
 std::vector<std::string> FastaRecord::getMinimizers(short k, short w) {
     std::vector<std::string> minimizers;
 
@@ -50,8 +54,8 @@ std::vector<std::string> FastaRecord::getMinimizers(short k, short w) {
     return minimizers;
 }
 
+// string representation of object (only first 40 letters of sequence are printed)
 std::ostream& operator<<(std::ostream &strm, const FastaRecord &record) {
-    // string representation of object (only first 40 letters of sequence are printed)
     strm << record.header_ << std::endl;
     strm << record.sequence_.substr(0, 40) << "...";
     return strm;
