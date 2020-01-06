@@ -19,8 +19,9 @@ void FastaRecord::extendSequence(const std::string& sequence) {
 // sequence with consecutive windows, while inner for loop iterates through given windows and
 // computes k-mers. At the end of the inner loop a minimizers is found for a given window.
 // In both cases consecutive means shifted by one.
-std::vector<std::string> FastaRecord::getMinimizers(short k, short w) {
-    std::vector<std::string> minimizers;
+std::map<std::string, std::unordered_set<uint>> FastaRecord::getMinimizers(short k, short w) {
+
+    std::map<std::string, std::unordered_set<uint>> minimizers;
 
     std::string::iterator win_start = sequence_.begin();
     while(true) {
@@ -41,7 +42,8 @@ std::vector<std::string> FastaRecord::getMinimizers(short k, short w) {
             }
         }
 
-        minimizers.push_back(min);
+        uint pos = static_cast<uint>(std::distance(sequence_.begin(), min_i));
+        minimizers[min].insert(pos);
 
         // stops if end of k-mer is at the end of sequence
         if(win_pos + k - 1 >= sequence_.end()) {
