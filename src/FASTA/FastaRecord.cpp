@@ -17,33 +17,34 @@ void FastaRecord::extendSequence(const std::string& sequence) {
 
 std::vector<std::string> FastaRecord::getMinimizers(short k, short w) {
     std::vector<std::string> minimizers;
-    int window_size = w + k - 1;
 
-    std::string::iterator seq_start = sequence_.begin();
-
+    std::string::iterator win_start = sequence_.begin();
     while(true) {
-        std::string::iterator win_start = seq_start;
-        std::string::iterator win_end = win_start + window_size;
 
+        // initializes window's minimizer as first k-mer
         std::string::iterator min_i = win_start;
         std::string min = std::string(min_i, min_i + k);
 
-        while(win_start < win_end - k + 1) {
-            std::string kmer = std::string(win_start, win_start + k); //??
+        // finds minimizer for window (starting from second k-mer)
+        auto win_pos = win_start + 1;
+        for (; win_pos < win_start + w; ++win_pos) {
+
+            std::string kmer = std::string(win_pos, win_pos + k);
 
             if(kmer < min) {
+                min_i = win_pos;
                 min = kmer;
             }
-
-            win_start ++;
         }
 
         minimizers.push_back(min);
-        seq_start ++;
 
-        if(seq_start >= sequence_.end() - window_size + 1){
+        // stops if end of k-mer is at the end of sequence
+        if(win_pos + k >= sequence_.end()) {
             break;
         }
+
+        ++win_start;
     }
 
     return minimizers;
