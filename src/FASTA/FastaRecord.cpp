@@ -40,7 +40,7 @@ std::vector<std::string> FastaRecord::getMinimizers(short k, short w) {
         minimizers.push_back(min);
 
         // stops if end of k-mer is at the end of sequence
-        if(win_pos + k >= sequence_.end()) {
+        if(win_pos + k - 1 >= sequence_.end()) {
             break;
         }
 
