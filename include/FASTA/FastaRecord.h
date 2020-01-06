@@ -1,5 +1,7 @@
 #include <vector>
 #include <string>
+#include <map>
+#include <unordered_set>
 
 /**
  * @brief Class that describes one record in Fasta file
@@ -47,11 +49,11 @@ public:
      *
      * @param k size of a k-mer
      * @param w number of consecutive adjacent k-mers in a window.
-     * @return std::vector<std::string> adjacent sequence's minimizers
+     * @return map of minimizers to positions where they occur
      *
      * @see https://academic.oup.com/bioinformatics/article/20/18/3363/202143
      */
-    std::vector<std::string> getMinimizers(short k, short w);
+    std::map<std::string, std::unordered_set<uint>> getMinimizers(short k, short w);
 
     FastaRecord& operator=(const FastaRecord &) = default;
     friend std::ostream& operator<<(std::ostream &strm, const FastaRecord &record);
