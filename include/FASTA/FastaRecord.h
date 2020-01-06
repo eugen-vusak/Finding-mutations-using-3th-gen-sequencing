@@ -13,6 +13,9 @@
 class FastaRecord {
 
 public:
+    typedef std::map<std::string, std::unordered_set<uint>> MinimizersTable;
+
+public:
     std::string sequence_;
     std::string header_;
 
@@ -53,7 +56,7 @@ public:
      *
      * @see https://academic.oup.com/bioinformatics/article/20/18/3363/202143
      */
-    std::map<std::string, std::unordered_set<uint>> getMinimizers(short k, short w);
+    MinimizersTable getMinimizers(short k, short w);
 
     FastaRecord& operator=(const FastaRecord &) = default;
     friend std::ostream& operator<<(std::ostream &strm, const FastaRecord &record);
