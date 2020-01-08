@@ -1,5 +1,16 @@
 #include <string>
 
+class Seed;
+
+// make seed hashable
+namespace std {
+template<>
+struct hash<Seed> {
+    size_t operator()(const Seed& obj) const;
+};
+}
+
+
 class Seed {
 private:
     size_t start_pos_read_;
@@ -18,6 +29,9 @@ public:
     size_t extendRight(std::string& read, std::string& reference);
     size_t extendBoth(std::string& read, std::string& reference);
 
+    bool operator==(const Seed& other) const;
 
     friend std::ostream& operator<<(std::ostream &strm, const Seed &seed);
+
+    friend size_t std::hash<Seed>::operator()(const Seed& obj) const;
 };

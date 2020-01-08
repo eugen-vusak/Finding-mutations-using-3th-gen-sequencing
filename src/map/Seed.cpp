@@ -66,11 +66,30 @@ size_t Seed::extendBoth(std::string& read, std::string& reference) {
     return extension_size;
 }
 
+bool Seed::operator==(const Seed& other) const {
+    return (start_pos_read_ == other.start_pos_read_ and
+            end_pos_read_ == other.end_pos_read_ and
+            size_ == other.size_);
 }
+
 
 std::ostream& operator<<(std::ostream &strm, const Seed &seed) {
     strm << "Seed(" << seed.start_pos_read_ << " <-> " << seed.start_pos_reference_;
     // strm << ", " << seed.start_pos_reference_ << " -> " << seed.end_pos_reference_;
     strm << ", " << seed.size_;
     return strm << ")";
+}
+
+template <class T>
+inline void hash_combine(std::size_t& seed, const T& v) {
+    std::hash<T> hasher;
+    seed ^= hasher(v) + 0x9e3779b9 + (seed<<6) + (seed>>2);
+}
+
+size_t std::hash<Seed>::operator()(const Seed& obj) const {
+    size_t seed = 0;
+    hash_combine(seed, obj.start_pos_read_);
+    hash_combine(seed, obj.start_pos_reference_);
+    hash_combine(seed, obj.size_);
+    return seed;
 }
