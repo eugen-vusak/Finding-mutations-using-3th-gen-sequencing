@@ -13,7 +13,7 @@
 class FastaRecord {
 
 public:
-    typedef std::map<std::string, std::unordered_set<uint>> MinimizersTable;
+    typedef std::map<std::string, std::unordered_set<unsigned int>> MinimizersTable;
 
 public:
     std::string sequence_;
