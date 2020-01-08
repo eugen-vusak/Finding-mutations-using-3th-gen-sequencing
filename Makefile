@@ -10,14 +10,16 @@ LIBRARIES	:=
 
 ifeq ($(OS),Windows_NT)
 EXECUTABLE	:= main.exe
+MKDIR := mkdir
 else
 EXECUTABLE	:= main
+MKDIR := mkdir -p
 endif
 
 all: dir $(BIN)/$(EXECUTABLE)
 
 dir: 
-	mkdir -p $(BIN)
+	$(MKDIR) $(BIN)
 
 clean:
 	$(RM) $(BIN)/$(EXECUTABLE)
