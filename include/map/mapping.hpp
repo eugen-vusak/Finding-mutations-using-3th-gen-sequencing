@@ -25,5 +25,10 @@ Band minexmap(FastaRecord& read,
               short w,
               short k);
 
+Band minimap(FastaRecord& read,
+             FastaRecord::MinimizersTable& reference_minimizers,
+             short w,
+             short k);
+
 } // namespace mapping
 

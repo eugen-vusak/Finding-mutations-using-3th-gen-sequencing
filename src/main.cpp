@@ -1,10 +1,11 @@
 #include <iostream>
 #include "FASTA/FastaFile.hpp"
 #include "map/mapping.hpp"
+#include <stdio.h>
 
 
-#define w                           2
-#define k                           2
+#define w   2
+#define k   2
 
 int main() {
 
@@ -25,7 +26,15 @@ int main() {
         std::cout << "New record" << std::endl;
 
         FastaRecord read = reads_file.getNextRecord();
-        Mapping::minexmap(read, reference, reference_minimizers, w, k);
+        mapping::Band band = mapping::minexmap(read, reference, reference_minimizers, w, k);
+
+        for(const auto& pair : band) {
+            std::cout << pair.second << std::endl;
+        }
+
+        // char c;
+        // scanf("%c", &c);
+        break;
 
     }
 }
