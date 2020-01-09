@@ -1,4 +1,5 @@
 #include <string>
+#include <cstdint>
 
 class Seed;
 
@@ -12,22 +13,19 @@ struct hash<Seed> {
 
 
 class Seed {
-private:
-    size_t start_pos_read_;
-    size_t start_pos_reference_;
+public:
+    uint32_t start_pos_read_;
+    uint32_t start_pos_reference_;
 
-    size_t size_;
-
-    size_t end_pos_read_;
-    size_t end_pos_reference_;
+    uint32_t size_;
 
 public:
     Seed() = default;
-    Seed(size_t start_pos_read, size_t start_pos_reference, size_t size);
+    Seed(uint32_t start_pos_read, uint32_t start_pos_reference, size_t size);
 
-    size_t extendLeft(std::string& read, std::string& reference);
-    size_t extendRight(std::string& read, std::string& reference);
-    size_t extendBoth(std::string& read, std::string& reference);
+    uint32_t extendLeft(std::string& read, std::string& reference);
+    uint32_t extendRight(std::string& read, std::string& reference);
+    uint32_t extendBoth(std::string& read, std::string& reference);
 
     bool operator==(const Seed& other) const;
 

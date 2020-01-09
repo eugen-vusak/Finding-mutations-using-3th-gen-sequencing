@@ -2,21 +2,20 @@
 
 #include <iostream>
 
-Seed::Seed(size_t start_pos_read, size_t start_pos_reference, size_t size)
+Seed::Seed(uint32_t start_pos_read, uint32_t start_pos_reference, size_t size)
     :start_pos_read_(start_pos_read),
      start_pos_reference_(start_pos_reference),
-     size_(size),
-     end_pos_read_(start_pos_read + size),
-     end_pos_reference_(start_pos_reference + size)
-{}
+     size_(static_cast<uint32_t>(size)) {
 
-size_t Seed::extendLeft(std::string& read, std::string& reference) {
+}
+
+uint32_t Seed::extendLeft(std::string& read, std::string& reference) {
 
     auto read_iter = read.begin() + static_cast<unsigned>(start_pos_read_) - 1;
     auto reference_iter = reference.begin() + static_cast<unsigned>(start_pos_reference_) - 1;
 
-    size_t extension_size = 0;
-    while (read_iter >= read.begin() and reference_iter >= reference.begin()) {
+    uint32_t extension_size = 0;
+    while (read_iter >= read.begin() && reference_iter >= reference.begin()) {
 
         if (*read_iter != *reference_iter) {
             break;
@@ -34,20 +33,17 @@ size_t Seed::extendLeft(std::string& read, std::string& reference) {
     return extension_size;
 }
 
-size_t Seed::extendRight(std::string& read, std::string& reference) {
+uint32_t Seed::extendRight(std::string& read, std::string& reference) {
 
-    auto read_iter = read.begin() + static_cast<unsigned>(end_pos_read_);
-    auto reference_iter = reference.begin() + static_cast<unsigned>(end_pos_reference_);
+    auto read_iter = read.begin() + static_cast<unsigned>(start_pos_read_ + size_);
+    auto reference_iter = reference.begin() + static_cast<unsigned>(start_pos_reference_ + size_);
 
-    size_t extension_size = 0;
-    while (read_iter < read.end() and reference_iter < reference.end()) {
+    uint32_t extension_size = 0;
+    while (read_iter < read.end() && reference_iter < reference.end()) {
 
         if (*read_iter != *reference_iter) {
             break;
         }
-
-        end_pos_read_++;
-        end_pos_reference_++;
 
         extension_size++;
 
@@ -58,8 +54,8 @@ size_t Seed::extendRight(std::string& read, std::string& reference) {
     return extension_size;
 }
 
-size_t Seed::extendBoth(std::string& read, std::string& reference) {
-    size_t extension_size = 0u;
+uint32_t Seed::extendBoth(std::string& read, std::string& reference) {
+    uint32_t extension_size = 0u;
     extension_size += extendLeft(read, reference);
     extension_size += extendRight(read, reference);
 
@@ -67,8 +63,7 @@ size_t Seed::extendBoth(std::string& read, std::string& reference) {
 }
 
 bool Seed::operator==(const Seed& other) const {
-    return (start_pos_read_ == other.start_pos_read_ and
-            end_pos_read_ == other.end_pos_read_ and
+    return (start_pos_read_ == other.start_pos_read_ &&
             size_ == other.size_);
 }
 

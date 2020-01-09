@@ -1,6 +1,7 @@
 #include "FASTA/FastaRecord.hpp"
 
 #include "iostream"
+#include "cstdint"
 
 FastaRecord::FastaRecord()
     :sequence_(),
@@ -42,7 +43,7 @@ FastaRecord::MinimizersTable FastaRecord::getMinimizers(short k, short w) {
             }
         }
 
-        unsigned int pos = static_cast<unsigned int>(std::distance(sequence_.begin(), min_i));
+        uint16_t pos = static_cast<uint16_t>(std::distance(sequence_.begin(), min_i));
         minimizers[min].insert(pos);
 
         // stops if end of k-mer is at the end of sequence

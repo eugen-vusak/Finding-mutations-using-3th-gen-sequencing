@@ -5,8 +5,7 @@
 FastaFile::FastaFile(const std::string& filename)
     : filename_(filename),
       has_next_record_(false),
-      next_header_()
-{
+      next_header_() {
     open();
 }
 
