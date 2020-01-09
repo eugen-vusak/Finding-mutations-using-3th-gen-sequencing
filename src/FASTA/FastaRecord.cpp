@@ -16,6 +16,10 @@ void FastaRecord::extendSequence(const std::string& sequence) {
     sequence_ += sequence;
 }
 
+std::string& FastaRecord::getSequence() {
+    return sequence_;
+}
+
 // The main part of the function are two nested loops. Outer while loop iterates through
 // sequence with consecutive windows, while inner for loop iterates through given windows and
 // computes k-mers. At the end of the inner loop a minimizers is found for a given window.
