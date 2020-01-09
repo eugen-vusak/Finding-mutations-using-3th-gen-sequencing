@@ -1,3 +1,6 @@
+#ifndef SEED_HPP
+#define SEED_HPP
+
 #include <string>
 #include <cstdint>
 
@@ -13,7 +16,7 @@ struct hash<Seed> {
 
 
 class Seed {
-public:
+private:
     uint32_t start_pos_read_;
     uint32_t start_pos_reference_;
 
@@ -22,6 +25,10 @@ public:
 public:
     Seed() = default;
     Seed(uint32_t start_pos_read, uint32_t start_pos_reference, size_t size);
+
+    uint32_t getStartReadPostion();
+    uint32_t getStartReferencePostion();
+    uint32_t getSize();
 
     uint32_t extendLeft(std::string& read, std::string& reference);
     uint32_t extendRight(std::string& read, std::string& reference);
@@ -35,3 +42,5 @@ public:
 
     friend size_t std::hash<Seed>::operator()(const Seed& obj) const;
 };
+
+#endif // !SEED_HPP
