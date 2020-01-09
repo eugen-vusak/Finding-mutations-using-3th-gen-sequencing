@@ -1,14 +1,25 @@
 #include "FASTA/FastaRecord.hpp"
 
-namespace Mapping {
+#include "map/Seed.hpp"
 
-void minimap(FastaRecord& read,
-             FastaRecord& reference,
-             FastaRecord::MinimizersTable& reference_minimizers,
-             short w,
-             short k);
+// #include <set>
+#include <vector>
+#include <utility>
 
-void minexmap(FastaRecord& read,
+namespace mapping {
+
+template<typename P>
+struct CompareSecond {
+    bool operator()(const P& firstPair, const P& secondPair) const {
+        return firstPair.second < secondPair.second;
+    }
+};
+
+typedef std::pair<int32_t, Seed> Pair;
+typedef std::vector<mapping::Pair> Band;
+// typedef std::set<Pair, CompareSecond<Pair>> Band;
+
+Band minexmap(FastaRecord& read,
               FastaRecord& reference,
               FastaRecord::MinimizersTable& reference_minimizers,
               short w,

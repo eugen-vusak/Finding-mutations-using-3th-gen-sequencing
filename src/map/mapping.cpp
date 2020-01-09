@@ -1,19 +1,34 @@
 #include "map/mapping.hpp"
 
-#include "map/Seed.hpp"
-
 #include <cstdint>
 #include <iostream>
 #include <algorithm>
 
-void Mapping::minexmap(FastaRecord& read,
-                       FastaRecord& reference,
-                       FastaRecord::MinimizersTable& reference_minimizers,
-                       short w,
-                       short k) {
+#define EPSILON 2
 
-    std::vector<std::pair<int32_t, Seed>> array;
+static uint32_t get_band_lenght_duplicates(mapping::Band band) {
 
+    uint32_t len = band.begin()->second.getSize();
+
+    for (auto it = band.begin() + 1; it < band.end(); ++it) {
+        if (*it == *(it-1)) {
+            continue;
+        }
+
+        len += it->second.getSize();
+    }
+
+    return len;
+}
+
+
+mapping::Band mapping::minexmap(FastaRecord& read,
+                                FastaRecord& reference,
+                                FastaRecord::MinimizersTable& reference_minimizers,
+                                short w,
+                                short k) {
+
+    std::vector<mapping::Pair> array;
 
     FastaRecord::MinimizersTable read_minimizers = read.getMinimizers(k, w);
     for (const auto& read_minimizer_pos : read_minimizers) {
@@ -35,24 +50,34 @@ void Mapping::minexmap(FastaRecord& read,
                 Seed seed(read_pos, reference_pos, read_minimizer.size());
                 seed.extendBoth(read.getSequence(), reference.getSequence());
 
-                int32_t diff = static_cast<int32_t>(seed.start_pos_read_ - seed.start_pos_reference_);
+                int32_t diff = static_cast<int32_t>(seed.getStartReadPostion() - seed.getStartReferencePostion());
                 array.push_back(std::make_pair(diff, seed));
             }
         }
     }
 
     std::sort(array.begin(), array.end());
-    // std::sort(array.begin(), array.end(), std::greater<std::array<int32_t, 2>>());
 
-    for (const auto& item : array) {
-        std::cout << item.first << ", " << item.second << std::endl;
+    // find best band from all matches
+    uint32_t max_band_lenght = 0;
+    mapping::Band best_band;
+
+    auto b = array.begin();
+    for(auto e = array.begin(); e < array.end(); ++e) {
+
+        if (e+1 == array.end() || (e+1)->first - e->first >= EPSILON ) {
+
+            mapping::Band band(b, e+1);
+
+            uint32_t band_lenght = get_band_lenght_duplicates(band);
+            if (band_lenght > max_band_lenght) {
+                max_band_lenght = band_lenght;
+                best_band = band;
+            }
+
+            b = e + 1;
+        }
     }
 
-
-    // b = 1
-    // for e in array.size():
-    //     if A[e+1].c - A[e].c >= eps:
-    //         C - max_col_subset(A[b..e])
-    //         print
-    //         b = e + 1
+    return best_band;
 }
