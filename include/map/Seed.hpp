@@ -28,6 +28,8 @@ public:
     uint32_t extendBoth(std::string& read, std::string& reference);
 
     bool operator==(const Seed& other) const;
+    bool operator<(const Seed& other) const;
+    bool operator>(const Seed& other) const;
 
     friend std::ostream& operator<<(std::ostream &strm, const Seed &seed);
 

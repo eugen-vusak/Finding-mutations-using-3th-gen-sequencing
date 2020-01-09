@@ -67,6 +67,13 @@ bool Seed::operator==(const Seed& other) const {
             size_ == other.size_);
 }
 
+bool Seed::operator<(const Seed& other) const {
+    return start_pos_reference_ < other.start_pos_reference_;
+}
+
+bool Seed::operator>(const Seed& other) const {
+    return start_pos_reference_ > other.start_pos_reference_;
+}
 
 std::ostream& operator<<(std::ostream &strm, const Seed &seed) {
     strm << "Seed(" << seed.start_pos_read_ << " <-> " << seed.start_pos_reference_;
