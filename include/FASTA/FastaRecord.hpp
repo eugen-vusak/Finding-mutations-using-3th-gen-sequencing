@@ -1,4 +1,6 @@
-#include <vector>
+#ifndef FASTA_RECORD_HPP
+#define FASTA_RECORD_HPP
+
 #include <string>
 #include <map>
 #include <unordered_set>
@@ -13,7 +15,7 @@
 class FastaRecord {
 
 public:
-    typedef std::map<std::string, std::unordered_set<unsigned int>> MinimizersTable;
+    typedef std::map<std::string, std::unordered_set<uint32_t>> MinimizersTable;
 
 private:
     std::string sequence_;
@@ -38,6 +40,8 @@ public:
      */
     void extendSequence(const std::string& sequence);
 
+    std::string& getSequence();
+
 
     /**
      * @brief Computes and returns vector of k-mer minimizers from record's attribute
@@ -61,3 +65,5 @@ public:
     FastaRecord& operator=(const FastaRecord &) = default;
     friend std::ostream& operator<<(std::ostream &strm, const FastaRecord &record);
 };
+
+#endif // !FASTA_RECORD_HPP

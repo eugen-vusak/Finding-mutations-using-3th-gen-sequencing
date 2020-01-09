@@ -1,7 +1,10 @@
+#ifndef FASTA_FILE_HPP
+#define FASTA_FILE_HPP
+
 #include <string>
 #include <fstream>
 
-#include <FASTA/FastaRecord.h>
+#include <FASTA/FastaRecord.hpp>
 
 /**
  * @brief class that describes file of FASTA format
@@ -81,3 +84,4 @@ private:
 
 };
 
+#endif // !FASTA_FILE_HPP

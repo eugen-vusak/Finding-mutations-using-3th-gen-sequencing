@@ -1,4 +1,4 @@
-#include "FASTA/FastaRecord.h"
+#include "FASTA/FastaRecord.hpp"
 
 #include "iostream"
 

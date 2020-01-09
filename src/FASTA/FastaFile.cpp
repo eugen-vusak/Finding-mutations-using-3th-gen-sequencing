@@ -1,4 +1,4 @@
-#include "FASTA/FastaFile.h"
+#include "FASTA/FastaFile.hpp"
 
 #include <iostream>
 
