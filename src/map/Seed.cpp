@@ -9,6 +9,18 @@ Seed::Seed(uint32_t start_pos_read, uint32_t start_pos_reference, size_t size)
 
 }
 
+uint32_t Seed::getStartReadPostion() {
+    return start_pos_read_;
+}
+
+uint32_t Seed::getStartReferencePostion() {
+    return start_pos_reference_;
+}
+
+uint32_t Seed::getSize() {
+    return size_;
+}
+
 uint32_t Seed::extendLeft(std::string& read, std::string& reference) {
 
     auto read_iter = read.begin() + static_cast<unsigned>(start_pos_read_) - 1;

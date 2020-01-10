@@ -2,7 +2,7 @@
 #define FASTA_RECORD_HPP
 
 #include <string>
-#include <map>
+#include <unordered_map>
 #include <unordered_set>
 
 /**
@@ -15,7 +15,7 @@
 class FastaRecord {
 
 public:
-    typedef std::map<std::string, std::unordered_set<uint32_t>> MinimizersTable;
+    typedef std::unordered_map<std::string, std::unordered_set<uint32_t>> MinimizersTable;
 
 private:
     std::string sequence_;
@@ -56,7 +56,7 @@ public:
      *
      * @param k size of a k-mer
      * @param w number of consecutive adjacent k-mers in a window.
-     * @return map of minimizers to positions where they occur
+     * @return unordered_map of minimizers to positions where they occur
      *
      * @see https://academic.oup.com/bioinformatics/article/20/18/3363/202143
      */
