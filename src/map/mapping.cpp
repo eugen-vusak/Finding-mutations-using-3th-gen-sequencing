@@ -6,27 +6,34 @@
 
 #define EPSILON 2
 
-static uint32_t get_band_lenght_duplicates(mapping::Band band) {
 
-    uint32_t len = band.begin()->second.getSize();
+template <typename Iterator>
+static uint32_t get_band_lenght_duplicates(Iterator beign, Iterator end) {
 
-    for (auto it = band.begin() + 1; it < band.end(); ++it) {
+    uint32_t len = beign->second.getSize();
+    for (auto it = beign + 1; it < end; ++it) {
+
+        // ignore duplicates
         if (*it == *(it-1)) {
             continue;
         }
 
         len += it->second.getSize();
     }
-
     return len;
+
 }
 
-static uint32_t get_band_lenght(mapping::Band band) {
-    uint32_t len = 0u;
-    for (auto pair : band) {
-        len += pair.second.getSize();
+template <typename Iterator>
+static uint32_t get_band_lenght(Iterator beign, Iterator end) {
+
+    uint32_t len = beign->second.getSize();
+    for (auto it = beign + 1; it < end; ++it) {
+
+        len += it->second.getSize();
     }
     return len;
+
 }
 
 mapping::Band mapping::minexmap(FastaRecord& read,
@@ -35,19 +42,21 @@ mapping::Band mapping::minexmap(FastaRecord& read,
                                 short w,
                                 short k) {
 
-    std::vector<mapping::Pair> array;
+    std::vector<mapping::Pair> hits;
 
     FastaRecord::MinimizersTable read_minimizers = read.getMinimizers(k, w);
+
+    // collects minimizer hits between read and reference
     for (const auto& read_minimizer_pos : read_minimizers) {
 
-        // find exact matches
+        // find hits (exact matches)
         std::string read_minimizer = read_minimizer_pos.first; // minimizer value
         auto reference_minimizer_pos = reference_minimizers.find(read_minimizer);
         if (reference_minimizer_pos == reference_minimizers.end()) {
             continue;
         }
 
-        // for all matched positions append differences to array
+        // for all matched positions append differences and seeds to hits
         std::unordered_set<uint32_t> read_positions = read_minimizer_pos.second;
         std::unordered_set<uint32_t> reference_positions = reference_minimizer_pos->second;
 
@@ -58,35 +67,38 @@ mapping::Band mapping::minexmap(FastaRecord& read,
                 seed.extendBoth(read.getSequence(), reference.getSequence());
 
                 int32_t diff = static_cast<int32_t>(seed.getStartReadPostion() - seed.getStartReferencePostion());
-                array.push_back(std::make_pair(diff, seed));
+                hits.push_back(std::make_pair(diff, seed));
             }
         }
     }
 
-    std::sort(array.begin(), array.end());
+    // sorts hits in order of difference, reference_position
+    std::sort(hits.begin(), hits.end());
 
-    // find best band from all matches
+
     uint32_t max_band_lenght = 0;
-    mapping::Band best_band;
+    std::vector<mapping::Pair>::iterator max_set_begin;
+    std::vector<mapping::Pair>::iterator max_set_end;
 
-    auto b = array.begin();
-    for(auto e = array.begin(); e < array.end(); ++e) {
+    // preforms single linkage clustering to group approximately colinear hits
+    auto b = hits.begin();
+    for(auto e = hits.begin(); e < hits.end(); ++e) {
 
-        if (e+1 == array.end() || (e+1)->first - e->first >= EPSILON ) {
+        if (e+1 == hits.end() || (e+1)->first - e->first >= EPSILON ) {
 
-            mapping::Band band(b, e+1);
-
-            uint32_t band_lenght = get_band_lenght_duplicates(band);
+            // find longest approximately colinear set of hits
+            uint32_t band_lenght = get_band_lenght_duplicates(b, e+1);
             if (band_lenght > max_band_lenght) {
                 max_band_lenght = band_lenght;
-                best_band = band;
+                max_set_begin = b;
+                max_set_end = e+1;
             }
 
             b = e + 1;
         }
     }
 
-    return best_band;
+    return mapping::Band(max_set_begin, max_set_end);
 }
 
 mapping::Band mapping::minimap(FastaRecord& read,
@@ -94,7 +106,7 @@ mapping::Band mapping::minimap(FastaRecord& read,
                                short w,
                                short k) {
 
-    std::vector<mapping::Pair> array;
+    std::vector<mapping::Pair> hits;
 
     FastaRecord::MinimizersTable read_minimizers = read.getMinimizers(k, w);
     for (const auto& read_minimizer_pos : read_minimizers) {
@@ -106,7 +118,7 @@ mapping::Band mapping::minimap(FastaRecord& read,
             continue;
         }
 
-        // for all matched positions append differences to array
+        // for all matched positions append differences to hits
         std::unordered_set<uint32_t> read_positions = read_minimizer_pos.second;
         std::unordered_set<uint32_t> reference_positions = reference_minimizer_pos->second;
 
@@ -116,33 +128,36 @@ mapping::Band mapping::minimap(FastaRecord& read,
                 Seed seed(read_pos, reference_pos, read_minimizer.size());
 
                 int32_t diff = static_cast<int32_t>(seed.getStartReadPostion() - seed.getStartReferencePostion());
-                array.push_back(std::make_pair(diff, seed));
+                hits.push_back(std::make_pair(diff, seed));
             }
         }
     }
 
-    std::sort(array.begin(), array.end());
+    // sorts hits in order of difference, reference_position
+    std::sort(hits.begin(), hits.end());
 
-    // find best band from all matches
+
     uint32_t max_band_lenght = 0;
-    mapping::Band best_band;
+    std::vector<mapping::Pair>::iterator max_set_begin;
+    std::vector<mapping::Pair>::iterator max_set_end;
 
-    auto b = array.begin();
-    for(auto e = array.begin(); e < array.end(); ++e) {
+    // preforms single linkage clustering to group approximately colinear hits
+    auto b = hits.begin();
+    for(auto e = hits.begin(); e < hits.end(); ++e) {
 
-        if (e+1 == array.end() || (e+1)->first - e->first >= EPSILON ) {
+        if (e+1 == hits.end() || (e+1)->first - e->first >= EPSILON ) {
 
-            mapping::Band band(b, e+1);
-
-            uint32_t band_lenght = get_band_lenght(band);
+            // find longest approximately colinear set of hits
+            uint32_t band_lenght = get_band_lenght_duplicates(b, e+1);
             if (band_lenght > max_band_lenght) {
                 max_band_lenght = band_lenght;
-                best_band = band;
+                max_set_begin = b;
+                max_set_end = e+1;
             }
 
             b = e + 1;
         }
     }
 
-    return best_band;
+    return mapping::Band(max_set_begin, max_set_end);
 }
