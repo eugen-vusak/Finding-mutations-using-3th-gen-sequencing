@@ -1,3 +1,6 @@
+#ifndef MAPPING_HPP
+#define MAPPING_HPP
+
 #include "FASTA/FastaRecord.hpp"
 
 #include "map/Seed.hpp"
@@ -32,3 +35,4 @@ Band minimap(FastaRecord& read,
 
 } // namespace mapping
 
+#endif //  MAPPING_HPP
