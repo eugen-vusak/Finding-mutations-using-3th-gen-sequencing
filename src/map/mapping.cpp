@@ -9,8 +9,8 @@
 
 template <typename Iterator>
 static uint32_t get_band_lenght_duplicates(Iterator beign, Iterator end) {
-
-    uint32_t len = beign->second.getSize();
+    
+    uint32_t len = beign->second.getSizeReference();
     for (auto it = beign + 1; it < end; ++it) {
 
         // ignore duplicates
@@ -18,7 +18,7 @@ static uint32_t get_band_lenght_duplicates(Iterator beign, Iterator end) {
             continue;
         }
 
-        len += it->second.getSize();
+        len += it->second.getSizeReference();
     }
     return len;
 
@@ -27,7 +27,7 @@ static uint32_t get_band_lenght_duplicates(Iterator beign, Iterator end) {
 template <typename Iterator>
 static uint32_t get_band_lenght(Iterator beign, Iterator end) {
 
-    uint32_t len = beign->second.getSize();
+    uint32_t len = beign->second.getSizeReference();
     for (auto it = beign + 1; it < end; ++it) {
 
         len += it->second.getSize();
