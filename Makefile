@@ -27,5 +27,5 @@ clean:
 run: all
 	./$(BIN)/$(EXECUTABLE)
 
-$(BIN)/$(EXECUTABLE): $(SRC)/*.cpp $(SRC)/*/*.cpp 
-	$(CC) $(C_FLAGS) -I$(INCLUDE) -L$(LIB) $^ -o $@ $(LIBRARIES)
+$(BIN)/$(EXECUTABLE): $(SRC)/*.cpp $(SRC)/*/*.cpp modules/cJSON/cJSON*.c
+	$(CC) $(C_FLAGS) -I$(INCLUDE) -Imodules/cJSON -L$(LIB) $^ -o $@ $(LIBRARIES)
