@@ -53,12 +53,12 @@ public:
      * reduced significantly.
      *
      * Having w <= k guarantees that no gaps appear between adjacent minimizers.
+     * @cite 10.1093/bioinformatics/bth408
      *
      * @param k size of a k-mer
      * @param w number of consecutive adjacent k-mers in a window.
      * @return unordered_map of minimizers to positions where they occur
      *
-     * @see https://academic.oup.com/bioinformatics/article/20/18/3363/202143
      */
     MinimizersTable getMinimizers(short k, short w);
 
