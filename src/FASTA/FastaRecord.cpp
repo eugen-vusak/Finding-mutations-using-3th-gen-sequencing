@@ -41,7 +41,7 @@ FastaRecord::MinimizersTable FastaRecord::getMinimizers(short k, short w) {
 
             std::string kmer = std::string(win_pos, win_pos + k);
 
-            if(kmer < min) {
+            if (minimizerCompare(kmer, min) < 0) {
                 min_i = win_pos;
                 min = kmer;
             }
@@ -59,6 +59,15 @@ FastaRecord::MinimizersTable FastaRecord::getMinimizers(short k, short w) {
     }
 
     return minimizers;
+}
+
+int FastaRecord::minimizerCompare(const std::string& m1, const std::string& m2) {
+    for(size_t i = 0; i < m1.size() && i < m2.size(); i++) {
+        if(m1[i] != m2[i]) {
+            return letter_ordering[m1[i]] < letter_ordering[m2[i]] ? -1 : 1;
+        }
+    }
+    return m1.size() < m2.size() ? -1 : m1.size() == m2.size() ? 0 : 1;
 }
 
 // string representation of object (only first 40 letters of sequence are printed)
