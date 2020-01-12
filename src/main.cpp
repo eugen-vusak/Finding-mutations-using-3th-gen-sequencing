@@ -1,16 +1,20 @@
-#include <iostream>
 #include "FASTA/FastaFile.hpp"
 #include "map/mapping.hpp"
+#include "align/alignment.hpp"
+
+#include <iostream>
 #include <stdio.h>
+#include <algorithm>
 
+#define w   12
+#define k   12
 
-#define w   2
-#define k   2
 
 int main() {
 
-    // FastaFile reference_file("../data/Bioinfo_19_20_train_data/lambda.fasta");
-    FastaFile reference_file("tests/data/ref.fasta");
+    FastaFile reference_file("../data/Bioinfo_19_20_train_data/lambda.fasta");
+    //FastaFile reference_file("tests/data/ref.fasta");
+    //FastaFile reference_file("../data/reference.fasta");
 
     FastaRecord reference;
     FastaRecord::MinimizersTable reference_minimizers;
@@ -18,23 +22,28 @@ int main() {
     if (reference_file.hasNextRecord()) {
         reference = reference_file.getNextRecord();
         reference_minimizers = reference.getMinimizers(k, w);
+    } else {
+        // thorw exception
     }
 
-    // FastaFile reads_file("../data/Bioinfo_19_20_train_data/lambda_simulated_reads.fasta");
-    FastaFile reads_file("tests/data/reads.fasta");
+    FastaFile reads_file("../data/Bioinfo_19_20_train_data/lambda_simulated_reads.fasta");
+    //FastaFile reads_file("tests/data/reads.fasta");
+    //FastaFile reads_file("../data/read.fasta");
+
+    int n = 0;
+    SmithWaterman::MutationsTupleSet mutations;
     while (reads_file.hasNextRecord()) {
-        std::cout << "New record" << std::endl;
+        std::cout << n << ": " << std::endl;
 
         FastaRecord read = reads_file.getNextRecord();
         mapping::Band band = mapping::minexmap(read, reference, reference_minimizers, w, k);
 
-        for(const auto& pair : band) {
-            std::cout << pair.second << std::endl;
-        }
+        alignment::alignRead(reference, read, band, mutations);
 
-        // char c;
-        // scanf("%c", &c);
-        break;
+        if (n++ == 15) break;
+    }
 
+    for(auto mut : mutations) {
+        std::cout << std::get<0>(mut) << "," << std::get<1>(mut) << "," << std::get<2>(mut) << std::endl;
     }
 }
