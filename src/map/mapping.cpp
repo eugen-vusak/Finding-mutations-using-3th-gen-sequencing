@@ -5,6 +5,7 @@
 #include <algorithm>
 
 #define EPSILON 2
+#define MIN_EXTENSION 7
 
 
 /**
@@ -82,10 +83,12 @@ mapping::Band mapping::minexmap(FastaRecord& read,
 
                 // make seed from hit and extend it to both directions
                 Seed seed(read_pos, reference_pos, read_minimizer.size());
-                seed.extendBoth(read.getSequence(), reference.getSequence());
+                uint32_t extension_size = seed.extendBoth(read.getSequence(), reference.getSequence());
 
-                int32_t diff = static_cast<int32_t>(seed.getStartReadPostion() - seed.getStartReferencePostion());
-                hits.push_back(std::make_pair(diff, seed));
+                if(extension_size > MIN_EXTENSION) {
+                    int32_t diff = static_cast<int32_t>(seed.getStartReadPostion() - seed.getStartReferencePostion());
+                    hits.push_back(std::make_pair(diff, seed));
+                }
             }
         }
     }
