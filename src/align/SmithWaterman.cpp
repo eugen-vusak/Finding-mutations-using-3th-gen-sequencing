@@ -15,8 +15,11 @@ SmithWaterman::SmithWaterman(const std::string& source,
       target_(" " + target),
       use_blosum_(use_blosum),
       matrix_(source_.size(),
-              std::vector<Cell>(target_.size(), Cell{0, -1})
-             ) {
+              std::vector<Cell>(target_.size(), Cell{0, -1})),
+      max_score_(-1),
+      max_score_i_(-1),
+      max_score_j_(-1)
+    {
 
     calcMatrix();
 }
@@ -78,37 +81,52 @@ void SmithWaterman::calcMatrix() {
 
 
             matrix_[i][j].parent = 0;
-            for (int op = MATCH; op <= DELETE; op++)
+            for (int op = MATCH; op <= DELETE; op++) {
                 if (opt[op] > matrix_[i][j].score) {
                     matrix_[i][j].score = opt[op];
                     matrix_[i][j].parent = op;
                 }
+            }
+
+            // update best score in aligment matrix and its position, needed for path reconstruction later
+            if(matrix_[i][j].score > max_score_) {
+                max_score_ = matrix_[i][j].score;
+                max_score_i_ = i;
+                max_score_j_ = j;
+            }
         }
     }
 }
 
-void SmithWaterman::reconstruct_path(size_t i, size_t j) {
-    if (matrix_[i][j].parent == -1) {
+void SmithWaterman::reconstruct_path(size_t start_ref, MutationsTupleSet& mutations) {
+    SmithWaterman::reconstruct_path(start_ref, max_score_i_, max_score_j_, mutations);
+}
+
+void SmithWaterman::reconstruct_path(size_t start_ref, size_t i, size_t j, MutationsTupleSet& mutations) {
+    if (matrix_[i][j].parent == -1 || matrix_[i][j].score == 0) {
         return;
     }
 
     if (matrix_[i][j].parent == MATCH) {
-        reconstruct_path(i - 1, j - 1);
-        std::cout << (source_[i] == target_[j] ? 'M' : 'S');
+        reconstruct_path(start_ref, i - 1, j - 1, mutations);
+        if(source_[i] != target_[j]){
+            mutations.insert(std::make_tuple('X', start_ref + j, source_[i]));
+        }
         return;
     }
 
     if (matrix_[i][j].parent == INSERT) {
-        reconstruct_path(i, j - 1);
-        std::cout << "I";
+        reconstruct_path(start_ref, i, j - 1, mutations);
+        mutations.insert(std::make_tuple('I', start_ref + j - 1, source_[i]));
         return;
     }
 
     if (matrix_[i][j].parent == DELETE) {
-        reconstruct_path(i - 1, j);
-        std::cout << "D";
+        reconstruct_path(start_ref, i - 1, j, mutations);
+        mutations.insert(std::make_tuple('D', start_ref + j, '-'));
         return;
     }
+
 }
 
 void SmithWaterman::print_matrix(bool scoreQ) {
