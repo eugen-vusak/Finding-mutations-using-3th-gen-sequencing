@@ -68,7 +68,7 @@ public:
 private:
 
     std::unordered_map<char, int> letter_ordering = {
-        {'C', 0}, {'G', 1}, {'T', 2}, {'A', 3}
+        {'C', 0}, {'A', 1}, {'T', 2}, {'G', 3}
     };
     int minimizerCompare(const std::string& m1, const std::string& m2);
 };
