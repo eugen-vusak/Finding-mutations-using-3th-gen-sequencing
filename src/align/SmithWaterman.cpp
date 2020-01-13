@@ -112,7 +112,7 @@ void SmithWaterman::reconstruct_path(size_t start_ref, size_t i, size_t j, Mutat
         reconstruct_path(start_ref, i - 1, j - 1, mutations);
 
         if(source_[i] != target_[j]) {
-            mutations.push_back(std::make_tuple('X', start_ref + j, source_[i]));
+            mutations.push_back(std::make_tuple('X', start_ref + j - 1, source_[i]));
         } else {
             // MATCH
         }
@@ -122,7 +122,7 @@ void SmithWaterman::reconstruct_path(size_t start_ref, size_t i, size_t j, Mutat
     if (matrix_[i][j].parent == INSERT) {
         reconstruct_path(start_ref, i, j - 1, mutations);
 
-        mutations.push_back(std::make_tuple('D', start_ref + j, '-'));
+        mutations.push_back(std::make_tuple('D', start_ref + j - 1, '-'));
         return;
     }
 
