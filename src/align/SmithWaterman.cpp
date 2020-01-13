@@ -19,7 +19,7 @@ SmithWaterman::SmithWaterman(const std::string& source,
       max_score_(-1),
       max_score_i_(-1),
       max_score_j_(-1)
-    {
+{
 
     calcMatrix();
 }
@@ -46,20 +46,21 @@ int SmithWaterman::bolsum32match(char a, char b) {
     return blosum_values[i][j];
 }
 
-int SmithWaterman::match(char c, char d) {
+inline int SmithWaterman::match(char c, char d) {
     if (c == d)
-        return 2;
+        return 5;
     else
-        return  -1;
+        return  -4;
 }
 
-int SmithWaterman::indel(char) {
-    return -2;
+inline int SmithWaterman::indel(char) {
+    return -4;
 }
 
-int SmithWaterman::insert(char) {
-    return  -2;
+inline int SmithWaterman::insert(char) {
+    return  -4;
 }
+
 
 void SmithWaterman::calcMatrix() {
     int opt[3];			// scores of three operations
@@ -79,8 +80,7 @@ void SmithWaterman::calcMatrix() {
                 opt[DELETE] = matrix_[i - 1][j].score + indel(source_[i]);
             }
 
-
-            matrix_[i][j].parent = 0;
+            matrix_[i][j].parent = -1;
             for (int op = MATCH; op <= DELETE; op++) {
                 if (opt[op] > matrix_[i][j].score) {
                     matrix_[i][j].score = opt[op];
@@ -98,32 +98,38 @@ void SmithWaterman::calcMatrix() {
     }
 }
 
-void SmithWaterman::reconstruct_path(size_t start_ref, MutationsTupleSet& mutations) {
+void SmithWaterman::reconstruct_path(size_t start_ref, MutationsTupleVector& mutations) {
     SmithWaterman::reconstruct_path(start_ref, max_score_i_, max_score_j_, mutations);
 }
 
-void SmithWaterman::reconstruct_path(size_t start_ref, size_t i, size_t j, MutationsTupleSet& mutations) {
-    if (matrix_[i][j].parent == -1 || matrix_[i][j].score == 0) {
+void SmithWaterman::reconstruct_path(size_t start_ref, size_t i, size_t j, MutationsTupleVector& mutations) {
+
+    if (matrix_[i][j].parent == -1) {
         return;
     }
 
     if (matrix_[i][j].parent == MATCH) {
         reconstruct_path(start_ref, i - 1, j - 1, mutations);
-        if(source_[i] != target_[j]){
-            mutations.insert(std::make_tuple('X', start_ref + j, source_[i]));
+
+        if(source_[i] != target_[j]) {
+            mutations.push_back(std::make_tuple('X', start_ref + j, source_[i]));
+        } else {
+            // MATCH
         }
         return;
     }
 
     if (matrix_[i][j].parent == INSERT) {
         reconstruct_path(start_ref, i, j - 1, mutations);
-        mutations.insert(std::make_tuple('I', start_ref + j - 1, source_[i]));
+
+        mutations.push_back(std::make_tuple('D', start_ref + j, '-'));
         return;
     }
 
     if (matrix_[i][j].parent == DELETE) {
         reconstruct_path(start_ref, i - 1, j, mutations);
-        mutations.insert(std::make_tuple('D', start_ref + j, '-'));
+
+        mutations.push_back(std::make_tuple('I', (start_ref + j - 1), source_[i]));
         return;
     }
 

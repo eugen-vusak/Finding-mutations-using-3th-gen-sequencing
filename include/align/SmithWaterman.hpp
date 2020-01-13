@@ -6,19 +6,10 @@
 #include <set>
 
 
-struct mutationTuple_comparator {
-    bool operator()(const std::tuple<char, size_t, char>& lhs,
-                    const std::tuple<char, size_t, char>& rhs) const {
-
-        return std::get<1>(lhs) < std::get<1>(rhs);
-    }
-};
-
-
 class SmithWaterman {
 
 public:
-    typedef std::set<std::tuple<char, size_t, char>, mutationTuple_comparator> MutationsTupleSet;
+    typedef std::vector<std::tuple<char, size_t, char>> MutationsTupleVector;
 
 private:
     typedef struct {
@@ -45,8 +36,8 @@ public:
 
     void print_matrix(bool scoreQ = true);
 
-    void reconstruct_path(size_t start_ref, MutationsTupleSet& mutations);
-    void reconstruct_path(size_t start_ref, size_t i, size_t j, MutationsTupleSet& mutations);
+    void reconstruct_path(size_t start_ref, MutationsTupleVector& mutations);
+    void reconstruct_path(size_t start_ref, size_t i, size_t j, MutationsTupleVector& mutations);
 
 private:
     void calcMatrix();

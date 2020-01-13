@@ -7,6 +7,6 @@
 namespace alignment {
 
 void alignRead(FastaRecord& reference, FastaRecord& read, mapping::Band band,
-               SmithWaterman::MutationsTupleSet& mutations);
+               SmithWaterman::MutationsTupleVector& mutations);
 
 }
