@@ -40,7 +40,7 @@ public:
      */
     void extendSequence(const std::string& sequence);
 
-    std::string& getSequence();
+    const std::string& getSequence() const;
 
 
     /**
@@ -60,17 +60,13 @@ public:
      * @return unordered_map of minimizers to positions where they occur
      *
      */
-    MinimizersTable getMinimizers(short k, short w);
+    MinimizersTable getMinimizers(short k, short w) const;
 
     FastaRecord& operator=(const FastaRecord &) = default;
     friend std::ostream& operator<<(std::ostream &strm, const FastaRecord &record);
 
 private:
-
-    std::unordered_map<char, int> letter_ordering = {
-        {'C', 0}, {'A', 1}, {'T', 2}, {'G', 3}
-    };
-    int minimizerCompare(const std::string& m1, const std::string& m2);
+    int minimizerCompare(const std::string& m1, const std::string& m2) const;
 };
 
 #endif // !FASTA_RECORD_HPP

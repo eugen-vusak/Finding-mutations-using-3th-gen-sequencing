@@ -50,8 +50,8 @@ typedef std::vector<mapping::Pair> Band;
  * @param k size of minimizer
  * @return Band maximal approximately colinear subset
  */
-Band minimap(FastaRecord& read,
-             FastaRecord::MinimizersTable& reference_minimizers,
+Band minimap(const FastaRecord& read,
+             const FastaRecord::MinimizersTable& reference_minimizers,
              short w,
              short k);
 
@@ -75,9 +75,9 @@ Band minimap(FastaRecord& read,
  * @param k size of minimizer
  * @return Band maximal approximately colinear subset
  */
-Band minexmap(FastaRecord& read,
-              FastaRecord& reference,
-              FastaRecord::MinimizersTable& reference_minimizers,
+Band minexmap(const FastaRecord& read,
+              const FastaRecord& reference,
+              const FastaRecord::MinimizersTable& reference_minimizers,
               short w,
               short k);
 

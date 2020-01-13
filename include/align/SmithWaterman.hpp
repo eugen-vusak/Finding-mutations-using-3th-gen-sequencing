@@ -7,7 +7,9 @@
 
 
 struct mutationTuple_comparator {
-    bool operator()(std::tuple<char, size_t, char> const & lhs, std::tuple<char, size_t, char> const & rhs ) {
+    bool operator()(const std::tuple<char, size_t, char>& lhs,
+                    const std::tuple<char, size_t, char>& rhs) const {
+
         return std::get<1>(lhs) < std::get<1>(rhs);
     }
 };

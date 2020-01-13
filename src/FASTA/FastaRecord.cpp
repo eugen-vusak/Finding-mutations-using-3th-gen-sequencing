@@ -16,7 +16,7 @@ void FastaRecord::extendSequence(const std::string& sequence) {
     sequence_ += sequence;
 }
 
-std::string& FastaRecord::getSequence() {
+const std::string& FastaRecord::getSequence() const {
     return sequence_;
 }
 
@@ -24,15 +24,15 @@ std::string& FastaRecord::getSequence() {
 // sequence with consecutive windows, while inner for loop iterates through given windows and
 // computes k-mers. At the end of the inner loop a minimizers is found for a given window.
 // In both cases consecutive means shifted by one.
-FastaRecord::MinimizersTable FastaRecord::getMinimizers(short k, short w) {
+FastaRecord::MinimizersTable FastaRecord::getMinimizers(short k, short w) const {
 
     MinimizersTable minimizers;
 
-    std::string::iterator win_start = sequence_.begin();
+    auto win_start = sequence_.begin();
     while(true) {
 
         // initializes window's minimizer as first k-mer
-        std::string::iterator min_i = win_start;
+        auto min_i = win_start;
         std::string min = std::string(min_i, min_i + k);
 
         // finds minimizer for window (starting from second k-mer)
@@ -61,7 +61,10 @@ FastaRecord::MinimizersTable FastaRecord::getMinimizers(short k, short w) {
     return minimizers;
 }
 
-int FastaRecord::minimizerCompare(const std::string& m1, const std::string& m2) {
+static std::unordered_map<char, int> letter_ordering = {
+    {'C', 0}, {'A', 1}, {'T', 2}, {'G', 3}
+};
+int FastaRecord::minimizerCompare(const std::string& m1, const std::string& m2) const {
     for(size_t i = 0; i < m1.size() && i < m2.size(); i++) {
         if(m1[i] != m2[i]) {
 

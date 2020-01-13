@@ -54,9 +54,9 @@ static uint32_t get_band_lenght(const Iterator& begin, const Iterator& end) {
 
 }
 
-mapping::Band mapping::minexmap(FastaRecord& read,
-                                FastaRecord& reference,
-                                FastaRecord::MinimizersTable& reference_minimizers,
+mapping::Band mapping::minexmap(const FastaRecord& read,
+                                const FastaRecord& reference,
+                                const FastaRecord::MinimizersTable& reference_minimizers,
                                 short w,
                                 short k) {
 
@@ -122,8 +122,8 @@ mapping::Band mapping::minexmap(FastaRecord& read,
     return mapping::Band(max_set_begin, max_set_end);
 }
 
-mapping::Band mapping::minimap(FastaRecord& read,
-                               FastaRecord::MinimizersTable& reference_minimizers,
+mapping::Band mapping::minimap(const FastaRecord& read,
+                               const FastaRecord::MinimizersTable& reference_minimizers,
                                short w,
                                short k) {
 
