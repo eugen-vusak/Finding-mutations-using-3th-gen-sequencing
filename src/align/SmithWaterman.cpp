@@ -39,10 +39,8 @@ SmithWaterman::SmithWaterman(const std::string& source,
       max_score_j_(0) {
 
     if (source_.size() > target_.size()) {
-        std::cout << "1" << std::endl;
         calcMatrixBandSourceLarger();
     } else {
-        std::cout << "2" << std::endl;
         calcMatrixBandTargetLarger(); // for equal as well
     }
 
@@ -154,26 +152,20 @@ void SmithWaterman::calcMatrixBandSourceLarger() {
     uint32_t source_size = static_cast<uint32_t>(source_.size());
     uint32_t target_size = static_cast<uint32_t>(target_.size());
 
-    std::cout << "ss: " << source_size << std::endl;
-    std::cout << "st: " << target_size << std::endl;
-
     uint32_t i = 1;
     for (; i <= (source_size - target_size); i++) {
-        std::cout << i << std::endl;
         for (uint32_t j = 1; j < i + band_width_; j++) {
             updateCell(opt, i, j);
         }
     }
 
     for (; i <= (source_size - target_size) + band_width_; i++) {
-        std::cout << i << std::endl;
         for (uint32_t j = 1; j < target_size; j++) {
             updateCell(opt, i, j);
         }
     }
 
     for (; i < source_size; i++) {
-        std::cout << i << std::endl;
         uint32_t j_start = i - (source_size - target_size) - band_width_ + 2;
         for (uint32_t j = j_start; j < target_size; j++) {
             updateCell(opt, i, j);
