@@ -1,0 +1,12 @@
+{
+    "alignment_eta": 10,
+    "alignment_sw_band_width": 10,
+    "alignment_sw_use_band": true,
+    "mapping_epsilon": 300,
+    "mapping_minimum_extension": 10,
+    "minimizers_k": 12,
+    "minimizers_w": 12,
+    "program_reads_filename": "tests/data/random_reads.fasta",
+    "program_reference_filename": "tests/data/random_ref.fasta",
+    "program_output_filename": "out.csv"
+}

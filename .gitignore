@@ -34,6 +34,3 @@ bin/
 
 # Visual Studio Code
 .vscode/
-
-# Config
-config.json

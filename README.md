@@ -14,6 +14,21 @@ https://www.dropbox.com/s/iqi3nbf839wrshh/Bioinfo_19_20_train_data.tar.gz?dl=0
 
     Same goes for another dataset lambda.
 
+
+## Running code
+
+run `make` to build program
+
+run `make run` to build and run program
+
+to run program after it was build run `bin/main` if on Linux or Mac. For Windows run `bin\main.exe`
+
+## Configuration
+
+To configure program there is a `config.json` file that can be altered to specify desired parameters and filenames that will be used. 
+<br>
+In `config.json` all parameters with `program` prefix are arguments of a program.
+
 ## References
 
 [1] Heng Li. [Minimap and miniasm: fast mapping and de novo assembly for noisy long sequences](https://doi.org/10.1093/bioinformatics/btw152). Bioinformatics, 32(14):2103–2110, 03 2016.
