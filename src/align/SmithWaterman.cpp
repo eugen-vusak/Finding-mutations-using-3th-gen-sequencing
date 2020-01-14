@@ -17,9 +17,8 @@ SmithWaterman::SmithWaterman(const std::string& source,
       matrix_(source_.size(),
               std::vector<Cell>(target_.size(), Cell{0, -1})),
       max_score_(-1),
-      max_score_i_(-1),
-      max_score_j_(-1)
-{
+      max_score_i_(0),
+      max_score_j_(0) {
 
     calcMatrix();
 }
@@ -47,21 +46,19 @@ int SmithWaterman::bolsum32match(char a, char b) {
 }
 
 inline int SmithWaterman::match(char c, char d) {
-    if (c == d)
-        return 5;
-    else
-        return  -4;
+    return c == d ? 5 : -4;
 }
 
-inline int SmithWaterman::indel(char) {
+inline int SmithWaterman::indel() {
     return -4;
 }
 
-inline int SmithWaterman::insert(char) {
+inline int SmithWaterman::insert() {
     return  -4;
 }
 
-
+// iterating through similarity matrix with two nested for loops and calculating 
+// score for every cell, while checking for highest cell in every iteration
 void SmithWaterman::calcMatrix() {
     int opt[3];			// scores of three operations
 
@@ -70,16 +67,18 @@ void SmithWaterman::calcMatrix() {
     for (size_t i = 1; i < source_size; i++) {
         for (size_t j = 1; j < target_size; j++) {
 
+            // if true use blosum matrix for calculating cell score
             if(use_blosum_ == true) {
                 opt[MATCH] = matrix_[i - 1][j - 1].score + bolsum32match(source_[i],target_[j]);
                 opt[INSERT] = matrix_[i][j - 1].score + penalty;
                 opt[DELETE] = matrix_[i - 1][j].score + penalty;
             } else {
                 opt[MATCH] = matrix_[i - 1][j - 1].score + match(source_[i],target_[j]);
-                opt[INSERT] = matrix_[i][j - 1].score + insert(target_[j]);
-                opt[DELETE] = matrix_[i - 1][j].score + indel(source_[i]);
+                opt[INSERT] = matrix_[i][j - 1].score + insert();
+                opt[DELETE] = matrix_[i - 1][j].score + indel();
             }
 
+            // choose highest score from top three adjacent cells
             matrix_[i][j].parent = -1;
             for (int op = MATCH; op <= DELETE; op++) {
                 if (opt[op] > matrix_[i][j].score) {
@@ -108,17 +107,18 @@ void SmithWaterman::reconstruct_path(size_t start_ref, size_t i, size_t j, Mutat
         return;
     }
 
+    // move diagonally
     if (matrix_[i][j].parent == MATCH) {
         reconstruct_path(start_ref, i - 1, j - 1, mutations);
 
         if(source_[i] != target_[j]) {
             mutations.push_back(std::make_tuple('X', start_ref + j - 1, source_[i]));
-        } else {
-            // MATCH
-        }
+        } 
+
         return;
     }
 
+    // move verticaly
     if (matrix_[i][j].parent == INSERT) {
         reconstruct_path(start_ref, i, j - 1, mutations);
 
@@ -126,6 +126,7 @@ void SmithWaterman::reconstruct_path(size_t start_ref, size_t i, size_t j, Mutat
         return;
     }
 
+    // move horizontally
     if (matrix_[i][j].parent == DELETE) {
         reconstruct_path(start_ref, i - 1, j, mutations);
 
@@ -155,8 +156,10 @@ void SmithWaterman::print_matrix(bool scoreQ) {
         // print values
         for (size_t j = 0; j < target_size; j++) {
             if (scoreQ == true) {
+                // print score
                 std::cout << " " << std::setw(2) << matrix_[i][j].score;
             } else {
+                // print parent
                 std::cout << " " << std::setw(2) << matrix_[i][j].parent;
             }
         }

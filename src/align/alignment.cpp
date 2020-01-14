@@ -14,6 +14,14 @@
  */
 #define ETA 10
 
+/**
+ * @brief comparator for mapping::Pair type
+ *
+ * @param lhs pair one
+ * @param rhs pair two
+ * @return true if seed in pair one is smaller
+ * @return false if seed in pair one is higher
+ */
 static bool compareByPos(const mapping::Pair &lhs,
                          const mapping::Pair &rhs) {
     return lhs.second < rhs.second;
@@ -24,34 +32,45 @@ void alignment::completeAlign(const FastaRecord& read,
                               const mapping::Band& band,
                               SmithWaterman::MutationsTupleVector& mutations) {
 
+    // ignore empty bands, i.e. there is no no mapping between given read and reference
     if (band.empty()) {
         return;
     }
 
+    // find first seed in mapping band
     auto first_pair = std::min_element(band.begin(), band.end(), compareByPos);
     const Seed& first_seed = first_pair->second;
 
+    // get starting read position from the first seed
     uint32_t start_read = first_seed.getStartReadPostion();
     int32_t start_ref = static_cast<int32_t>(
                             first_seed.getStartReferencePostion() -
                             start_read - ETA);
 
+    // check if starting reference index is out of range (lower than zero), if
+    // is remember that distance and set start index to zero
     int32_t ref_out_of_range = 0;
     if(start_ref < 0) {
         ref_out_of_range = start_ref;
         start_ref = 0;
     }
 
+    // calculate reference's sequence size
+    // negative value of ref_out_of_range is added in case when starting reference
+    // index is out of range, otherwise its value should be zero
     uint32_t seq_len = static_cast<uint32_t>(
                            static_cast<int32_t>(read.getSequence().size()) +
                            2 * ETA + ref_out_of_range);
 
+    // get reference sequence segment to which read sequence is mapped
     std::string ref_seq_segment = reference.getSequence().substr(
                                       static_cast<unsigned>(start_ref),
                                       seq_len);
 
+    // init SmithWaterman
     SmithWaterman sw(read.getSequence(), ref_seq_segment, false);
 
+    // align sequences and get mutations from alignment process
     sw.reconstruct_path(static_cast<unsigned>(start_ref), mutations);
 }
 
