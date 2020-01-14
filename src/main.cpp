@@ -31,7 +31,7 @@ int main() {
     //FastaFile reads_file("../data/read.fasta");
     // FastaFile reads_file("tests/data/random_reads.fasta");
 
-    int n = 0;
+    // int n = 0;
     while (reads_file.hasNextRecord()) {
         FastaRecord read = reads_file.getNextRecord();
         std::cout << read.getHeader() << std::endl;
@@ -44,7 +44,7 @@ int main() {
         alignment::completeAlign(read, reference, band, mutations);
         print_mutations(mutations);
 
-        if (n++ == 15) break;
+        // if (n++ == 15) break;
     }
 }
 

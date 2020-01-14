@@ -13,6 +13,7 @@
  * where E letter marks extra position due to ETA=3
  */
 #define ETA 10
+#define SW_BAND_WIDTH 10
 
 /**
  * @brief comparator for mapping::Pair type
@@ -67,8 +68,7 @@ void alignment::completeAlign(const FastaRecord& read,
                                       static_cast<unsigned>(start_ref),
                                       seq_len);
 
-    // init SmithWaterman
-    SmithWaterman sw(read.getSequence(), ref_seq_segment, false);
+    SmithWaterman sw(read.getSequence(), ref_seq_segment, SW_BAND_WIDTH, false);
 
     // align sequences and get mutations from alignment process
     sw.reconstruct_path(static_cast<unsigned>(start_ref), mutations);
@@ -97,9 +97,20 @@ void alignment::partialAlign(const FastaRecord& read,
     uint32_t ref_start = first_seed.getStartReferencePostion() + first_seed.getSizeReference();
     uint32_t ref_end = last_seed.getStartReferencePostion();
 
+    int32_t read_size = read_end - read_start;
+    if (read_size <= 0){
+        return;
+    }
+
+    int32_t ref_size = ref_end - ref_start;
+    if (ref_size <= 0){
+        return;
+    }
+
     SmithWaterman sw(
         read.getSequence().substr(read_start, read_end - read_start),
         reference.getSequence().substr(ref_start, ref_end - ref_start),
+        SW_BAND_WIDTH,
         false       // don't use blosum table
     );
 
