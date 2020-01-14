@@ -1,0 +1,10 @@
+<map id="mapping::minexmap" name="mapping::minexmap">
+<area shape="rect" id="node1" title="Maps read to reference using extended minimizers." alt="" coords="5,132,144,159"/>
+<area shape="rect" id="node2" href="$class_seed.html#a4932b1892e9eb246903338f861206f2a" title="Extends seed to both directions." alt="" coords="234,31,361,57"/>
+<area shape="rect" id="node5" href="$class_fasta_record.html#a00f6025f2bf7c1c4a64741714210568b" title="Computes and returns vector of k&#45;mer minimizers from record&#39;s attribute sequence_." alt="" coords="204,81,391,108"/>
+<area shape="rect" id="node6" href="$class_fasta_record.html#a6b8334ec9d8c26cf01fe28fd0ec49300" title=" " alt="" coords="207,132,388,159"/>
+<area shape="rect" id="node7" href="$class_seed.html#abbd0c653dceb32a5f78e551d63b16ec4" title="Get the start position of seed on read sequence." alt="" coords="207,183,388,209"/>
+<area shape="rect" id="node8" href="$class_seed.html#a1962a352ea2326434eac23aeff9fbb88" title="Get the start position of seed on reference sequence." alt="" coords="192,233,403,260"/>
+<area shape="rect" id="node3" href="$class_seed.html#a3cea4bf5d4052784aa5bd7749acbed44" title="Extends seed to left." alt="" coords="455,5,577,32"/>
+<area shape="rect" id="node4" href="$class_seed.html#a106410f3fe0542990581e5887e37c2fa" title="Extends seed to right." alt="" coords="451,56,581,83"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="FastaFile::~FastaFile" name="FastaFile::~FastaFile">
+<area shape="rect" id="node1" title="Destroy the Fasta File object." alt="" coords="5,5,152,32"/>
+<area shape="rect" id="node2" href="$class_fasta_file.html#a5bc1105a2e9ad1cfaefd47521e448b8c" title="closes file" alt="" coords="200,5,315,32"/>
+</map>

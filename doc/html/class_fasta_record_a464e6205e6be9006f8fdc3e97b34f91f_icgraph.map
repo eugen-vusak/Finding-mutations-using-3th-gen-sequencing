@@ -1,0 +1,6 @@
+<map id="FastaRecord::getMinimizers" name="FastaRecord::getMinimizers">
+<area shape="rect" id="node1" title="Computes and returns vector of k&#45;mer minimizers from record&#39;s attribute sequence_." alt="" coords="291,31,477,57"/>
+<area shape="rect" id="node2" href="$main_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="5,5,56,32"/>
+<area shape="rect" id="node3" href="$namespacemapping.html#a7bd1b801353b4c4737b31bb29e40eafb" title="Maps read to reference using extended minimizers." alt="" coords="104,31,243,57"/>
+<area shape="rect" id="node4" href="$namespacemapping.html#ad1e5785316fa1e0dcbe3f1a1cbb40b0d" title="Maps read to reference using minimizers." alt="" coords="109,81,237,108"/>
+</map>

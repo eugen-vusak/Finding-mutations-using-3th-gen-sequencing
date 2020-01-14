@@ -10,14 +10,16 @@ LIBRARIES	:=
 
 ifeq ($(OS),Windows_NT)
 EXECUTABLE	:= main.exe
+MAKE_BIN := if not exist $(BIN) mkdir $(BIN)
 else
 EXECUTABLE	:= main
+MKDIR :=  mkdir -p $(BIN)
 endif
 
 all: dir $(BIN)/$(EXECUTABLE)
 
 dir: 
-	mkdir -p $(BIN)
+	$(MAKE_BIN)
 
 clean:
 	$(RM) $(BIN)/$(EXECUTABLE)
@@ -25,5 +27,5 @@ clean:
 run: all
 	./$(BIN)/$(EXECUTABLE)
 
-$(BIN)/$(EXECUTABLE): $(SRC)/*.cpp $(SRC)/*/*.cpp 
-	$(CC) $(C_FLAGS) -I$(INCLUDE) -L$(LIB) $^ -o $@ $(LIBRARIES)
+$(BIN)/$(EXECUTABLE): $(SRC)/*.cpp $(SRC)/*/*.cpp modules/cJSON/cJSON*.c
+	$(CC) $(C_FLAGS) -I$(INCLUDE) -Imodules/cJSON -L$(LIB) $^ -o $@ $(LIBRARIES)
