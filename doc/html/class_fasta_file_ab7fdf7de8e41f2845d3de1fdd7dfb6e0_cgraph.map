@@ -1,0 +1,5 @@
+<map id="FastaFile::getNextRecord" name="FastaFile::getNextRecord">
+<area shape="rect" id="node1" title="Get the Next Record object." alt="" coords="5,31,177,57"/>
+<area shape="rect" id="node2" href="$class_fasta_record.html#a12eee89ffe438c0a495fb7f2d4164b6a" title="extends records sequence by appending provided sequence to existing" alt="" coords="225,5,428,32"/>
+<area shape="rect" id="node3" href="$class_fasta_record.html#aa28c97462f87185d4494275d6ad4efc6" title="Set the header of record." alt="" coords="244,56,409,83"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="Seed::extendBoth" name="Seed::extendBoth">
+<area shape="rect" id="node1" title="Extends seed to both directions." alt="" coords="5,31,132,57"/>
+<area shape="rect" id="node2" href="$class_seed.html#a3cea4bf5d4052784aa5bd7749acbed44" title="Extends seed to left." alt="" coords="185,5,306,32"/>
+<area shape="rect" id="node3" href="$class_seed.html#a106410f3fe0542990581e5887e37c2fa" title="Extends seed to right." alt="" coords="180,56,311,83"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="FastaFile::open" name="FastaFile::open">
+<area shape="rect" id="node1" title="Opens file." alt="" coords="192,5,304,32"/>
+<area shape="rect" id="node2" href="$class_fasta_file.html#a599ea65b3466bd6368b03d4eb88629ae" title="Construct a new FastaFile object and opens it." alt="" coords="5,5,144,32"/>
+</map>

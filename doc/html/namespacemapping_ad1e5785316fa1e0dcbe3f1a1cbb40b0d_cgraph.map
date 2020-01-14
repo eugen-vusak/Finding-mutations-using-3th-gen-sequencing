@@ -1,0 +1,6 @@
+<map id="mapping::minimap" name="mapping::minimap">
+<area shape="rect" id="node1" title="Maps read to reference using minimizers." alt="" coords="5,56,133,83"/>
+<area shape="rect" id="node2" href="$class_fasta_record.html#a464e6205e6be9006f8fdc3e97b34f91f" title="Computes and returns vector of k&#45;mer minimizers from record&#39;s attribute sequence_." alt="" coords="193,5,380,32"/>
+<area shape="rect" id="node3" href="$class_seed.html#a77d181d003f88c51ce2ba8b140123e9f" title="Get the start position of seed on read sequence." alt="" coords="196,56,377,83"/>
+<area shape="rect" id="node4" href="$class_seed.html#adde23193c7c953eb0862c96cd8307548" title="Get the start position of seed on reference sequence." alt="" coords="181,107,392,133"/>
+</map>
