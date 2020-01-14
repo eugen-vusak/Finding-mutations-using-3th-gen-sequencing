@@ -111,66 +111,77 @@ bool Seed::combine(Seed& other) {
     Seed* first_reference= this;
     Seed* second_reference = &other;
 
-    correctOrderRead(first_read, second_read);
-    int32_t shared_read = first_read->start_pos_read_ + first_read->size_read_ - second_read->start_pos_read_;
+    correctOrderRead(&first_read, &second_read);
+    int32_t shared_read = static_cast<int32_t>(
+                              first_read->start_pos_read_ +
+                              first_read->size_read_ -
+                              second_read->start_pos_read_);
 
     if (shared_read < 0) {
         return false;
     }
 
-    correctOrderReference(first_reference, second_reference);
-    int32_t shared_reference = first_reference->start_pos_reference_ + first_reference->size_reference_
-                               - second_reference->start_pos_reference_;
+    correctOrderReference(&first_reference, &second_reference);
+    int32_t shared_reference = static_cast<int32_t>(
+                                   first_reference->start_pos_reference_ +
+                                   first_reference->size_reference_ -
+                                   second_reference->start_pos_reference_);
     if (shared_reference < 0) {
         return false;
     }
 
-    size_read_ = first_read->size_read_ + second_read->size_read_ - shared_read;
+    size_read_ = first_read->size_read_ +
+                 second_read->size_read_ -
+                 static_cast<uint32_t>(shared_reference);
+
     start_pos_read_ = first_read->start_pos_read_;
 
-    size_reference_ = first_reference->size_reference_ + second_reference->size_reference_ - shared_reference;
+    size_reference_ = first_reference->size_reference_ +
+                      second_reference->size_reference_ -
+                      static_cast<uint32_t>(shared_reference);
+
     start_pos_reference_ = first_reference->start_pos_reference_;
 
     return true;
 }
 
-void Seed::correctOrderRead(Seed* first, Seed* second) {
-    if (first->start_pos_read_ < second->start_pos_read_) {
+void Seed::correctOrderRead(Seed** first, Seed** second) {
+    if ((*first)->start_pos_read_ < (*second)->start_pos_read_) {
         return;
     }
 
     Seed* tmp;
-    if (first->start_pos_read_ > second->start_pos_read_) {
-        tmp = first;
-        first = second;
-        second = tmp;
+    if ((*first)->start_pos_read_ > (*second)->start_pos_read_) {
+        tmp = *first;
+        *first = *second;
+        *second = tmp;
         return;
     }
-    if (first->size_read_ > second->size_read_) {
-        tmp = first;
-        first = second;
-        second = tmp;
+    if ((*first)->size_read_ > (*second)->size_read_) {
+        tmp = *first;
+        *first = *second;
+        *second = tmp;
     }
 
     return;
 }
 
-void Seed::correctOrderReference(Seed* first, Seed* second) {
-    if (first->start_pos_reference_ < second->start_pos_reference_) {
+void Seed::correctOrderReference(Seed** first, Seed** second) {
+    if ((*first)->start_pos_reference_ < (*second)->start_pos_reference_) {
         return;
     }
 
     Seed* tmp;
-    if (first->start_pos_reference_ > second->start_pos_reference_) {
-        tmp = first;
-        first = second;
-        second = tmp;
+    if ((*first)->start_pos_reference_ > (*second)->start_pos_reference_) {
+        tmp = *first;
+        *first = *second;
+        *second = tmp;
         return;
     }
-    if (first->size_reference_ > second->size_reference_) {
-        tmp = first;
-        first = second;
-        second = tmp;
+    if ((*first)->size_reference_ > (*second)->size_reference_) {
+        tmp = *first;
+        *first = *second;
+        *second = tmp;
     }
 
     return;

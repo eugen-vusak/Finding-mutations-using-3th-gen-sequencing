@@ -123,12 +123,12 @@ public:
 
     friend size_t std::hash<Seed>::operator()(const Seed& obj) const;
 
-    static void correctOrderRead(Seed* first, Seed* second);
-    static void correctOrderReference(Seed* first, Seed* second);
+    static void correctOrderRead(Seed** first, Seed** second);
+    static void correctOrderReference(Seed** first, Seed** second);
 
 private:
-    int32_t getSharedSizeRead_(const Seed& other);
-    int32_t getSharedSizeReference_(const Seed& other);
+    int32_t getSharedSizeRead_(const Seed& other) const;
+    int32_t getSharedSizeReference_(const Seed& other) const;
 };
 
 #endif // !SEED_HPP
