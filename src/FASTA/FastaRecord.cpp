@@ -20,6 +20,10 @@ const std::string& FastaRecord::getSequence() const {
     return sequence_;
 }
 
+const std::string& FastaRecord::getHeader() const {
+    return header_;
+}
+
 // The main part of the function are two nested loops. Outer while loop iterates through
 // sequence with consecutive windows, while inner for loop iterates through given windows and
 // computes k-mers. At the end of the inner loop a minimizers is found for a given window.

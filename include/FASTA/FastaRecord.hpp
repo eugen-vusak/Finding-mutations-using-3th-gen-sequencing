@@ -41,6 +41,7 @@ public:
     void extendSequence(const std::string& sequence);
 
     const std::string& getSequence() const;
+    const std::string& getHeader() const;
 
 
     /**
