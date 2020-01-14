@@ -4,7 +4,7 @@
 This is a project for [Bioinformatics class](https://www.fer.unizg.hr/predmet/bio). It's about finding mutations using 3th gen sequencing method.
 
 Mario Štrbac, Eugen Vušak <br>
-Voditelj: mag. ing. Robert Vaser
+Mentor: mag. ing. Robert Vaser
 
 ## Test data
 https://www.dropbox.com/s/iqi3nbf839wrshh/Bioinfo_19_20_train_data.tar.gz?dl=0
