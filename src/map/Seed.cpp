@@ -10,19 +10,19 @@ Seed::Seed(uint32_t start_pos_read, uint32_t start_pos_reference, size_t size)
 
 }
 
-uint32_t Seed::getStartReadPostion() {
+uint32_t Seed::getStartReadPostion() const {
     return start_pos_read_;
 }
 
-uint32_t Seed::getStartReferencePostion() {
+uint32_t Seed::getStartReferencePostion() const {
     return start_pos_reference_;
 }
 
-uint32_t Seed::getSizeRead() {
+uint32_t Seed::getSizeRead() const {
     return size_read_;
 }
 
-uint32_t Seed::getSizeReference() {
+uint32_t Seed::getSizeReference() const {
     return size_reference_;
 }
 

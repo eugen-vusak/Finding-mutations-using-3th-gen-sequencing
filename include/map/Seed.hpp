@@ -49,25 +49,25 @@ public:
      *
      * @return uint32_t
      */
-    uint32_t getStartReadPostion();
+    uint32_t getStartReadPostion() const;
     /**
      * @brief Get the start position of seed on reference sequence
      *
      * @return uint32_t
      */
-    uint32_t getStartReferencePostion();
+    uint32_t getStartReferencePostion() const;
     /**
      * @brief Get the size of seed on read sequence
      *
      * @return uint32_t
      */
-    uint32_t getSizeRead();
+    uint32_t getSizeRead() const;
     /**
      * @brief Get the size of seed on reference sequence
      *
      * @return uint32_t
      */
-    uint32_t getSizeReference();
+    uint32_t getSizeReference() const;
 
     /**
      * @brief Extends seed to left
