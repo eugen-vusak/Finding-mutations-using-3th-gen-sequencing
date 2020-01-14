@@ -1,5 +1,10 @@
 # Finding mutations using 3th generation sequencing
+![](images/mutation_detection_logo.png)
+
 This is a project for [Bioinformatics class](https://www.fer.unizg.hr/predmet/bio). It's about finding mutations using 3th gen sequencing method.
+
+Mario Štrbac, Eugen Vušak <br>
+Voditelj: mag. ing. Robert Vaser
 
 ## Test data
 https://www.dropbox.com/s/iqi3nbf839wrshh/Bioinfo_19_20_train_data.tar.gz?dl=0
@@ -34,3 +39,5 @@ In `config.json` all parameters with `program` prefix are arguments of a program
 [1] Heng Li. [Minimap and miniasm: fast mapping and de novo assembly for noisy long sequences](https://doi.org/10.1093/bioinformatics/btw152). Bioinformatics, 32(14):2103–2110, 03 2016.
 
 [2] Michael Roberts, Wayne Hayes, Brian R. Hunt, Stephen M. Mount, and James A. Yorke. [Reducing storage requirements for biological sequence comparison](https://doi.org/10.1093/bioinformatics/bth408). Bioinformatics, 20(18):3363–3369, 07 2004.
+
+[3] Mirjana Domazet-Lošo, Mile Šikić, Bioinformatika
