@@ -5,6 +5,7 @@
 #include <algorithm>
 
 #define EPSILON 2
+#define MIN_EXTENSION 7
 
 
 /**
@@ -18,7 +19,7 @@
 template <typename Iterator>
 static uint32_t get_band_lenght_duplicates(const Iterator& begin, const Iterator& end) {
 
-    uint32_t len = begin->second.getSize();
+    uint32_t len = begin->second.getSizeReference();
     for (auto it = begin + 1; it < end; ++it) {
 
         // ignore duplicates
@@ -26,7 +27,7 @@ static uint32_t get_band_lenght_duplicates(const Iterator& begin, const Iterator
             continue;
         }
 
-        len += it->second.getSize();
+        len += it->second.getSizeReference();
     }
     return len;
 
@@ -44,18 +45,18 @@ static uint32_t get_band_lenght_duplicates(const Iterator& begin, const Iterator
 template <typename Iterator>
 static uint32_t get_band_lenght(const Iterator& begin, const Iterator& end) {
 
-    uint32_t len = begin->second.getSize();
+    uint32_t len = begin->second.getSizeReference();
     for (auto it = begin + 1; it < end; ++it) {
 
-        len += it->second.getSize();
+        len += it->second.getSizeReference();
     }
     return len;
 
 }
 
-mapping::Band mapping::minexmap(FastaRecord& read,
-                                FastaRecord& reference,
-                                FastaRecord::MinimizersTable& reference_minimizers,
+mapping::Band mapping::minexmap(const FastaRecord& read,
+                                const FastaRecord& reference,
+                                const FastaRecord::MinimizersTable& reference_minimizers,
                                 short w,
                                 short k) {
 
@@ -82,10 +83,12 @@ mapping::Band mapping::minexmap(FastaRecord& read,
 
                 // make seed from hit and extend it to both directions
                 Seed seed(read_pos, reference_pos, read_minimizer.size());
-                seed.extendBoth(read.getSequence(), reference.getSequence());
+                uint32_t extension_size = seed.extendBoth(read.getSequence(), reference.getSequence());
 
-                int32_t diff = static_cast<int32_t>(seed.getStartReadPostion() - seed.getStartReferencePostion());
-                hits.push_back(std::make_pair(diff, seed));
+                if(extension_size > MIN_EXTENSION) {
+                    int32_t diff = static_cast<int32_t>(seed.getStartReadPostion() - seed.getStartReferencePostion());
+                    hits.push_back(std::make_pair(diff, seed));
+                }
             }
         }
     }
@@ -119,8 +122,8 @@ mapping::Band mapping::minexmap(FastaRecord& read,
     return mapping::Band(max_set_begin, max_set_end);
 }
 
-mapping::Band mapping::minimap(FastaRecord& read,
-                               FastaRecord::MinimizersTable& reference_minimizers,
+mapping::Band mapping::minimap(const FastaRecord& read,
+                               const FastaRecord::MinimizersTable& reference_minimizers,
                                short w,
                                short k) {
 

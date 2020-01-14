@@ -26,7 +26,8 @@ private:
     uint32_t start_pos_read_;       // start position of seed on read sequence
     uint32_t start_pos_reference_;  // start position of seed on reference sequence
 
-    uint32_t size_;                 // size of a seed
+    uint32_t size_read_;            // size of seed on read sequence
+    uint32_t size_reference_;       // size of read on reference sequence
 
 public:
     /**
@@ -48,19 +49,25 @@ public:
      *
      * @return uint32_t
      */
-    uint32_t getStartReadPostion();
+    uint32_t getStartReadPostion() const;
     /**
      * @brief Get the start position of seed on reference sequence
      *
      * @return uint32_t
      */
-    uint32_t getStartReferencePostion();
+    uint32_t getStartReferencePostion() const;
     /**
-     * @brief Get the size of the seed
+     * @brief Get the size of seed on read sequence
      *
      * @return uint32_t
      */
-    uint32_t getSize();
+    uint32_t getSizeRead() const;
+    /**
+     * @brief Get the size of seed on reference sequence
+     *
+     * @return uint32_t
+     */
+    uint32_t getSizeReference() const;
 
     /**
      * @brief Extends seed to left
@@ -106,6 +113,8 @@ public:
      */
     uint32_t extendBoth(const std::string& read, const std::string& reference);
 
+    bool combine(Seed& other);
+
     bool operator==(const Seed& other) const;
     bool operator<(const Seed& other) const;
     bool operator>(const Seed& other) const;
@@ -113,6 +122,13 @@ public:
     friend std::ostream& operator<<(std::ostream &strm, const Seed &seed);
 
     friend size_t std::hash<Seed>::operator()(const Seed& obj) const;
+
+    static void correctOrderRead(Seed** first, Seed** second);
+    static void correctOrderReference(Seed** first, Seed** second);
+
+private:
+    int32_t getSharedSizeRead_(const Seed& other) const;
+    int32_t getSharedSizeReference_(const Seed& other) const;
 };
 
 #endif // !SEED_HPP
