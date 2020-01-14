@@ -9,9 +9,6 @@
 #define EPSILON_DEFAULT 300
 #define MIN_EXTENSION_DEFAULT 7
 
-// init parameters
-const uint16_t epsilon = Config::getInstance().get("mapping_epsilon", EPSILON_DEFAULT);
-const uint16_t min_expansion = Config::getInstance().get("mapping_minimum_extension", MIN_EXTENSION_DEFAULT);
 
 /**
  * @brief Get the bend lenght (ignoring duplicates)
@@ -64,6 +61,10 @@ mapping::Band mapping::minexmap(const FastaRecord& read,
                                 const FastaRecord::MinimizersTable& reference_minimizers,
                                 short w,
                                 short k) {
+
+    // init parameters
+    const uint16_t epsilon = Config::getInstance().get("mapping_epsilon", EPSILON_DEFAULT);
+    const uint16_t min_expansion = Config::getInstance().get("mapping_minimum_extension", MIN_EXTENSION_DEFAULT);
 
     std::vector<mapping::Pair> hits;
 
@@ -131,6 +132,9 @@ mapping::Band mapping::minimap(const FastaRecord& read,
                                const FastaRecord::MinimizersTable& reference_minimizers,
                                short w,
                                short k) {
+
+    // init parameters
+    const uint16_t epsilon = Config::getInstance().get("mapping_epsilon", EPSILON_DEFAULT);
 
     std::vector<mapping::Pair> hits;
 
