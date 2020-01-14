@@ -52,7 +52,6 @@ int main() {
     // reads
     FastaFile reads_file(reads_filename);
 
-    // int n = 0;
     while (reads_file.hasNextRecord()) {
         FastaRecord read = reads_file.getNextRecord();
         std::cout << read.getHeader() << std::endl;
@@ -64,8 +63,6 @@ int main() {
         SmithWaterman::MutationsTupleVector mutations;
         alignment::completeAlign(read, reference, band, mutations);
         print_mutations(mutations, output_file);
-
-        // if (n++ == 15) break;
     }
 
     output_file.close();
