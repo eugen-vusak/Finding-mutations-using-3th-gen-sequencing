@@ -1,10 +1,15 @@
 #include "align/alignment.hpp"
 
+#include "config/Config.hpp"
+
 #include <iostream>
 #include <algorithm>
 
+#define ETA_DEFAULT 10
+#define SW_BAND_WIDTH_DEFAULT 10
+
 /**
- * @brief  ETA parameter marks how long of extra segment on
+ * @brief  eta parameter marks how long of extra segment on
  * each side of reference will be used for alignment
  *
  * Example:
@@ -12,8 +17,10 @@
  *  - reference:    EEEYYYYYYEEE
  * where E letter marks extra position due to ETA=3
  */
-#define ETA 10
-#define SW_BAND_WIDTH 10
+const uint16_t eta = Config::getInstance().get("alignment_eta", ETA_DEFAULT);
+
+const uint16_t sw_band_width = Config::getInstance().get("alignment_sw_band_width", SW_BAND_WIDTH_DEFAULT);
+const bool sw_use_band = Config::getInstance().get("alignment_sw_use_band", true);
 
 /**
  * @brief comparator for mapping::Pair type
@@ -46,7 +53,7 @@ void alignment::completeAlign(const FastaRecord& read,
     uint32_t start_read = first_seed.getStartReadPostion();
     int32_t start_ref = static_cast<int32_t>(
                             first_seed.getStartReferencePostion() -
-                            start_read - ETA);
+                            start_read - eta);
 
     // check if starting reference index is out of range (lower than zero), if
     // is remember that distance and set start index to zero
@@ -61,14 +68,19 @@ void alignment::completeAlign(const FastaRecord& read,
     // index is out of range, otherwise its value should be zero
     uint32_t seq_len = static_cast<uint32_t>(
                            static_cast<int32_t>(read.getSequence().size()) +
-                           2 * ETA + ref_out_of_range);
+                           2 * eta + ref_out_of_range);
 
     // get reference sequence segment to which read sequence is mapped
     std::string ref_seq_segment = reference.getSequence().substr(
                                       static_cast<unsigned>(start_ref),
                                       seq_len);
 
-    SmithWaterman sw(read.getSequence(), ref_seq_segment, SW_BAND_WIDTH, false);
+    SmithWaterman sw;
+    if (sw_use_band) {
+        sw = SmithWaterman(read.getSequence(), ref_seq_segment, sw_band_width, false);
+    } else {
+        sw = SmithWaterman(read.getSequence(), ref_seq_segment, false);
+    }
 
     // align sequences and get mutations from alignment process
     sw.reconstruct_path(static_cast<unsigned>(start_ref), mutations);
@@ -98,21 +110,30 @@ void alignment::partialAlign(const FastaRecord& read,
     uint32_t ref_end = last_seed.getStartReferencePostion();
 
     int32_t read_size = read_end - read_start;
-    if (read_size <= 0){
+    if (read_size <= 0) {
         return;
     }
 
     int32_t ref_size = ref_end - ref_start;
-    if (ref_size <= 0){
+    if (ref_size <= 0) {
         return;
     }
 
-    SmithWaterman sw(
-        read.getSequence().substr(read_start, read_end - read_start),
-        reference.getSequence().substr(ref_start, ref_end - ref_start),
-        SW_BAND_WIDTH,
-        false       // don't use blosum table
-    );
+    SmithWaterman sw;
+    if (sw_use_band) {
+        sw = SmithWaterman(
+                 read.getSequence().substr(read_start, read_end - read_start),
+                 reference.getSequence().substr(ref_start, ref_end - ref_start),
+                 sw_band_width,
+                 false       // don't use blosum table
+             );
+    } else {
+        sw = SmithWaterman(
+                 read.getSequence().substr(read_start, read_end - read_start),
+                 reference.getSequence().substr(ref_start, ref_end - ref_start),
+                 false       // don't use blosum table
+             );
+    }
 
     sw.reconstruct_path(ref_start, mutations);
 }

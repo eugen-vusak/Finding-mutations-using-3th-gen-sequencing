@@ -48,6 +48,8 @@ private:
     size_t max_score_j_;
 
 public:
+    SmithWaterman() = default;
+
     SmithWaterman(const std::string& source,
                   const std::string& target,
                   bool use_blosum = true);
@@ -105,7 +107,7 @@ private:
     inline void updateCell(int (&opt)[3], uint32_t i, uint32_t j);
     
     /**
-     * @brief 
+     * @brief Compute two-dimensional similarity matrix
      * 
      * Builds two-dimensional similarity matrix by computing score and parent value of every cell in
      * the matrix, starting from top left to bottom right cell, row by row. Score value is set by choosing

@@ -1,12 +1,17 @@
 #include "map/mapping.hpp"
 
+#include "config/Config.hpp"
+
 #include <cstdint>
 #include <iostream>
 #include <algorithm>
 
-#define EPSILON 2
-#define MIN_EXTENSION 7
+#define EPSILON_DEFAULT 300
+#define MIN_EXTENSION_DEFAULT 7
 
+// init parameters
+const uint16_t epsilon = Config::getInstance().get("mapping_epsilon", EPSILON_DEFAULT);
+const uint16_t min_expansion = Config::getInstance().get("mapping_minimum_extension", MIN_EXTENSION_DEFAULT);
 
 /**
  * @brief Get the bend lenght (ignoring duplicates)
@@ -85,7 +90,7 @@ mapping::Band mapping::minexmap(const FastaRecord& read,
                 Seed seed(read_pos, reference_pos, read_minimizer.size());
                 uint32_t extension_size = seed.extendBoth(read.getSequence(), reference.getSequence());
 
-                if(extension_size > MIN_EXTENSION) {
+                if(extension_size > min_expansion) {
                     int32_t diff = static_cast<int32_t>(seed.getStartReadPostion() - seed.getStartReferencePostion());
                     hits.push_back(std::make_pair(diff, seed));
                 }
@@ -105,7 +110,7 @@ mapping::Band mapping::minexmap(const FastaRecord& read,
     auto b = hits.begin();
     for(auto e = hits.begin(); e < hits.end(); ++e) {
 
-        if (e+1 == hits.end() || (e+1)->first - e->first >= EPSILON ) {
+        if (e+1 == hits.end() || (e+1)->first - e->first >= epsilon ) {
 
             // find longest approximately colinear set of hits
             uint32_t band_lenght = get_band_lenght_duplicates(b, e+1);
@@ -167,7 +172,7 @@ mapping::Band mapping::minimap(const FastaRecord& read,
     auto b = hits.begin();
     for(auto e = hits.begin(); e < hits.end(); ++e) {
 
-        if (e+1 == hits.end() || (e+1)->first - e->first >= EPSILON ) {
+        if (e+1 == hits.end() || (e+1)->first - e->first >= epsilon ) {
 
             // find longest approximately colinear set of hits
             uint32_t band_lenght = get_band_lenght(b, e+1);

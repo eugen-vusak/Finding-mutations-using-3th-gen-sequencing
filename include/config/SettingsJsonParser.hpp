@@ -21,9 +21,14 @@ public:
     bool isChanged() const;
 
     template<typename T>
-    void get(const std::string& key, T & value) const;
+    void get_to(const std::string& key, T & value) const;
     template<typename T>
-    void get(const std::string& key, std::vector<T> &value) const;
+    void get_to(const std::string& key, std::vector<T> &value) const;
+
+    template<typename T>
+    T get(const std::string& key) const;
+    template<typename T>
+    T get(const std::string& key, const T& def) const;
 
     template<typename T>
     void set(const std::string &key, const T value);
@@ -197,7 +202,7 @@ inline std::string SettingsJsonParser::convertToType<std::string>(const std::str
 }
 
 template<typename T>
-inline void SettingsJsonParser::get(const std::string& key, T &value) const {
+inline void SettingsJsonParser::get_to(const std::string& key, T &value) const {
     auto it = m_data.find(key);
 
     if (it != m_data.end()) {
@@ -205,12 +210,33 @@ inline void SettingsJsonParser::get(const std::string& key, T &value) const {
     }
 }
 
+template<typename T>
+inline T SettingsJsonParser::get(const std::string& key, const T& def) const {
+    T var = def;
+    get_to(key, var);
+    return var;
+}
+
+template<typename T>
+inline T SettingsJsonParser::get(const std::string& key) const {
+    T var;
+    get_to(key, var);
+    return var;
+}
+
+template<>
+inline std::string SettingsJsonParser::get(const std::string& key) const {
+    std::string var;
+    get_to(key, var);
+    return var;
+}
+
 /**
  * This method tries to read the value of a key into a vector. The values have to be
  * seperated by comma. The vector is cleared before it is filled.
  */
 template<typename T>
-inline void SettingsJsonParser::get(const std::string& key, std::vector<T> &value) const {
+inline void SettingsJsonParser::get_to(const std::string& key, std::vector<T> &value) const {
     auto it = m_data.find(key);
     if (it == m_data.end()) {
         return;

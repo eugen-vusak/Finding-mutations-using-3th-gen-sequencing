@@ -1,20 +1,40 @@
 #include "FASTA/FastaFile.hpp"
 #include "map/mapping.hpp"
 #include "align/alignment.hpp"
+#include "config/Config.hpp"
 
 #include <iostream>
+#include <fstream>
 
-#define w   12
-#define k   12
 
-static void print_mutations(const SmithWaterman::MutationsTupleVector& mutations);
+#define W_DEFAULT   12
+#define K_DEFAULT   12
+
+static void print_mutations(const SmithWaterman::MutationsTupleVector& mutations, std::ostream& out);
 
 int main() {
 
-    FastaFile reference_file("../data/Bioinfo_19_20_train_data/lambda.fasta");
-    //FastaFile reference_file("tests/data/ref.fasta");
-    //FastaFile reference_file("../data/reference.fasta");
-    // FastaFile reference_file("tests/data/random_ref.fasta");
+    // init config
+    Config::setProjectPath(get_project_path().string());
+    int error = load_config();
+    if (error) {
+        return -1;
+    }
+
+    // get parameters for minimizers computation
+    short w = Config::getInstance().get("minimizers_w", W_DEFAULT);
+    short k = Config::getInstance().get("minimizers_k", K_DEFAULT);
+
+    // get filenames
+    std::string reference_filename;
+    Config::getInstance().get_to("program_reference_filename", reference_filename);
+    std::string reads_filename;
+    Config::getInstance().get_to("program_reads_filename", reads_filename);
+    std::string output_filename;
+    Config::getInstance().get_to("program_output_filename", output_filename);
+
+    // reference
+    FastaFile reference_file(reference_filename);
 
     FastaRecord reference;
     FastaRecord::MinimizersTable reference_minimizers;
@@ -26,10 +46,11 @@ int main() {
         // thorw exception
     }
 
-    FastaFile reads_file("../data/Bioinfo_19_20_train_data/lambda_simulated_reads.fasta");
-    //FastaFile reads_file("tests/data/reads.fasta");
-    //FastaFile reads_file("../data/read.fasta");
-    // FastaFile reads_file("tests/data/random_reads.fasta");
+    std::ofstream output_file;
+    output_file.open(output_filename);
+
+    // reads
+    FastaFile reads_file(reads_filename);
 
     // int n = 0;
     while (reads_file.hasNextRecord()) {
@@ -42,16 +63,18 @@ int main() {
         // alignment
         SmithWaterman::MutationsTupleVector mutations;
         alignment::completeAlign(read, reference, band, mutations);
-        print_mutations(mutations);
+        print_mutations(mutations, output_file);
 
         // if (n++ == 15) break;
     }
+
+    output_file.close();
 }
 
-static void print_mutations(const SmithWaterman::MutationsTupleVector& mutations) {
+static void print_mutations(const SmithWaterman::MutationsTupleVector& mutations, std::ostream& out) {
     for(auto mut : mutations) {
-        std::cout << std::get<0>(mut) << ",";
-        std::cout << std::get<1>(mut) << ",";
-        std::cout << std::get<2>(mut) << std::endl;
+        out << std::get<0>(mut) << ",";
+        out << std::get<1>(mut) << ",";
+        out << std::get<2>(mut) << std::endl;
     }
 }
