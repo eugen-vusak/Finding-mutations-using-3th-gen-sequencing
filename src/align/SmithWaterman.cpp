@@ -1,5 +1,7 @@
 #include "align/SmithWaterman.hpp"
 
+#include "utils/hash.hpp"
+
 #include <iostream>
 #include <iomanip>
 
@@ -272,4 +274,12 @@ void SmithWaterman::print_matrix(bool scoreQ) {
         }
         std::cout << std::endl;
     }
+}
+
+size_t std::hash<SmithWaterman::Mutation>::operator()(const SmithWaterman::Mutation& obj) const {
+    size_t seed = 0;
+    hash_combine(seed, std::get<0>(obj));
+    hash_combine(seed, std::get<1>(obj));
+    hash_combine(seed, std::get<2>(obj));
+    return seed;
 }

@@ -18,7 +18,8 @@
 class SmithWaterman {
 
 public:
-    typedef std::vector<std::tuple<char, size_t, char>> MutationsTupleVector;
+    typedef std::tuple<char, size_t, char> Mutation;
+    typedef std::vector<Mutation> MutationsTupleVector;
 
 private:
     /**
@@ -105,10 +106,10 @@ public:
 
 private:
     inline void updateCell(int (&opt)[3], uint32_t i, uint32_t j);
-    
+
     /**
      * @brief Compute two-dimensional similarity matrix
-     * 
+     *
      * Builds two-dimensional similarity matrix by computing score and parent value of every cell in
      * the matrix, starting from top left to bottom right cell, row by row. Score value is set by choosing
      * maximum value between three top adjacent cells, except if all three are negative, then zero is set
@@ -152,5 +153,16 @@ private:
      */
     int insert();
 };
+
+
+// make Mutation hashable
+namespace std {
+
+template<>
+struct hash<SmithWaterman::Mutation> {
+    size_t operator()(const SmithWaterman::Mutation& obj) const;
+};
+}
+
 
 #endif // !SMITHWATERMAN_HPP
