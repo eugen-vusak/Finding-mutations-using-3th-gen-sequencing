@@ -5,12 +5,12 @@
 
 #include <iostream>
 #include <fstream>
-
+#include <unordered_map>
 
 #define W_DEFAULT   12
 #define K_DEFAULT   12
 
-static void print_mutations(const SmithWaterman::MutationsTupleVector& mutations, std::ostream& out);
+// static void print_mutations(const SmithWaterman::MutationsTupleVector& mutations, std::ostream& out);
 
 int main() {
 
@@ -52,26 +52,46 @@ int main() {
     // reads
     FastaFile reads_file(reads_filename);
 
+    std::unordered_map<SmithWaterman::Mutation, int> all_mutations;
+
     while (reads_file.hasNextRecord()) {
+
         FastaRecord read = reads_file.getNextRecord();
         std::cout << read.getHeader() << std::endl;
 
         // mapping
-        mapping::Band band = mapping::minexmap(read, reference, reference_minimizers, w, k);
+        // mapping::Band band = mapping::minexmap(read, reference, reference_minimizers, w, k);
+        mapping::Band band = mapping::minimap(read, reference_minimizers, w, k);
 
         // alignment
         SmithWaterman::MutationsTupleVector mutations;
         alignment::completeAlign(read, reference, band, mutations);
-        print_mutations(mutations, output_file);
+
+        // update all_muttations counter
+        for (auto mutaion: mutations) {
+            all_mutations[mutaion]++;
+        }
+        // print_mutations(mutations, output_file);
+    }
+
+    for(auto mut : all_mutations) {
+        if (mut.second < 8) {
+            continue;
+        }
+        output_file << std::get<0>(mut.first) << ",";
+        output_file << std::get<1>(mut.first) << ",";
+        output_file << std::get<2>(mut.first);
+        // output_file << " : " << mut.second;
+        output_file << std::endl;
     }
 
     output_file.close();
 }
 
-static void print_mutations(const SmithWaterman::MutationsTupleVector& mutations, std::ostream& out) {
-    for(auto mut : mutations) {
-        out << std::get<0>(mut) << ",";
-        out << std::get<1>(mut) << ",";
-        out << std::get<2>(mut) << std::endl;
-    }
-}
+// static void print_mutations(const SmithWaterman::MutationsTupleVector& mutations, std::ostream& out) {
+//     for(auto mut : mutations) {
+//         out << std::get<0>(mut) << ",";
+//         out << std::get<1>(mut) << ",";
+//         out << std::get<2>(mut) << std::endl;
+//     }
+// }
