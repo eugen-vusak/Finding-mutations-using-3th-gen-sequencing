@@ -7,6 +7,7 @@
 #include <vector>
 #include <tuple>
 #include <set>
+#include <cstdint>
 
 /**
  * @brief class that provides Smith-Waterman alignment algorithm along with
@@ -26,8 +27,8 @@ private:
      * @brief struct that represents a cell in similarity matrix
      */
     typedef struct {
-        int score;
-        int parent;
+        uint16_t score;
+        int8_t parent;
     } Cell;
 
 private:
