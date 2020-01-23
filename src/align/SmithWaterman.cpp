@@ -1,5 +1,7 @@
 #include "align/SmithWaterman.hpp"
 
+#include "utils/hash.hpp"
+
 #include <iostream>
 #include <iomanip>
 
@@ -152,21 +154,23 @@ void SmithWaterman::calcMatrixBandSourceLarger() {
     uint32_t source_size = static_cast<uint32_t>(source_.size());
     uint32_t target_size = static_cast<uint32_t>(target_.size());
 
+    uint32_t not_full_len = target_size - band_width_ - 1;
+
     uint32_t i = 1;
-    for (; i <= (source_size - target_size); i++) {
+    for (; i < not_full_len ; i++) {
         for (uint32_t j = 1; j < i + band_width_; j++) {
             updateCell(opt, i, j);
         }
     }
 
-    for (; i <= (source_size - target_size) + band_width_; i++) {
+    for (; i < source_size - not_full_len; i++) {
         for (uint32_t j = 1; j < target_size; j++) {
             updateCell(opt, i, j);
         }
     }
 
     for (; i < source_size; i++) {
-        uint32_t j_start = i - (source_size - target_size) - band_width_ + 2;
+        uint32_t j_start = i - (source_size - target_size) - band_width_;
         for (uint32_t j = j_start; j < target_size; j++) {
             updateCell(opt, i, j);
         }
@@ -270,4 +274,12 @@ void SmithWaterman::print_matrix(bool scoreQ) {
         }
         std::cout << std::endl;
     }
+}
+
+size_t std::hash<SmithWaterman::Mutation>::operator()(const SmithWaterman::Mutation& obj) const {
+    size_t seed = 0;
+    hash_combine(seed, std::get<0>(obj));
+    hash_combine(seed, std::get<1>(obj));
+    hash_combine(seed, std::get<2>(obj));
+    return seed;
 }

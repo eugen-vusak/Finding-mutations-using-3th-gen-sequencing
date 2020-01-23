@@ -2,11 +2,7 @@
 
 #include "config/Config.hpp"
 
-#include <iostream>
 #include <algorithm>
-
-#define ETA_DEFAULT 10
-#define SW_BAND_WIDTH_DEFAULT 10
 
 /**
  * @brief  eta parameter marks how long of extra segment on
@@ -17,10 +13,9 @@
  *  - reference:    EEEYYYYYYEEE
  * where E letter marks extra position due to ETA=3
  */
-const uint16_t eta = Config::getInstance().get("alignment_eta", ETA_DEFAULT);
+#define ETA_DEFAULT 10
+#define SW_BAND_WIDTH_DEFAULT 100
 
-const uint16_t sw_band_width = Config::getInstance().get("alignment_sw_band_width", SW_BAND_WIDTH_DEFAULT);
-const bool sw_use_band = Config::getInstance().get("alignment_sw_use_band", true);
 
 /**
  * @brief comparator for mapping::Pair type
@@ -39,6 +34,10 @@ void alignment::completeAlign(const FastaRecord& read,
                               const FastaRecord& reference,
                               const mapping::Band& band,
                               SmithWaterman::MutationsTupleVector& mutations) {
+
+    const uint16_t eta = Config::getInstance().get("alignment_eta", ETA_DEFAULT);
+    const uint16_t sw_band_width = Config::getInstance().get("alignment_sw_band_width", SW_BAND_WIDTH_DEFAULT);
+    const bool sw_use_band = Config::getInstance().get("alignment_sw_use_band", true);
 
     // ignore empty bands, i.e. there is no no mapping between given read and reference
     if (band.empty()) {
@@ -90,6 +89,9 @@ void alignment::partialAlign(const FastaRecord& read,
                              const FastaRecord& reference,
                              const mapping::Band& band,
                              SmithWaterman::MutationsTupleVector& mutations) {
+
+    const uint16_t sw_band_width = Config::getInstance().get("alignment_sw_band_width", SW_BAND_WIDTH_DEFAULT);
+    const bool sw_use_band = Config::getInstance().get("alignment_sw_use_band", true);
 
     // ignore empty bands
     if (band.empty()) {

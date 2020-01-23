@@ -1,12 +1,12 @@
 {
-    "alignment_eta": 10,
-    "alignment_sw_band_width": 10,
+    "alignment_eta": 30,
+    "alignment_sw_band_width": 150,
     "alignment_sw_use_band": true,
-    "mapping_epsilon": 300,
-    "mapping_minimum_extension": 10,
-    "minimizers_k": 12,
-    "minimizers_w": 12,
-    "program_reads_filename": "tests/data/random_reads.fasta",
-    "program_reference_filename": "tests/data/random_ref.fasta",
+    "mapping_epsilon": 100,
+    "mapping_minimum_extension": 7,
+    "program_reads_filename": "../data/lambda_simulated_reads.fasta",
+    "program_reference_filename": "../data/lambda.fasta",
+    "minimizers_k": 13,
+    "minimizers_w": 7,
     "program_output_filename": "out.csv"
 }

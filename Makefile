@@ -13,7 +13,7 @@ EXECUTABLE	:= main.exe
 MAKE_BIN := if not exist $(BIN) mkdir $(BIN)
 else
 EXECUTABLE	:= main
-MKDIR :=  mkdir -p $(BIN)
+MAKE_BIN :=  mkdir -p $(BIN)
 endif
 
 all: dir $(BIN)/$(EXECUTABLE)
