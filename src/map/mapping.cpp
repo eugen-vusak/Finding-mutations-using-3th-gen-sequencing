@@ -8,7 +8,7 @@
 
 #define EPSILON_DEFAULT 300
 #define MIN_EXTENSION_DEFAULT 7
-
+#define MIN_BAND_LENGHT_DEFAULT 5000
 
 /**
  * @brief Get the bend lenght (ignoring duplicates)
@@ -125,6 +125,10 @@ mapping::Band mapping::minexmap(const FastaRecord& read,
         }
     }
 
+    if (max_band_lenght < MIN_BAND_LENGHT_DEFAULT) {
+        return mapping::Band();
+    }
+
     return mapping::Band(max_set_begin, max_set_end);
 }
 
@@ -188,6 +192,12 @@ mapping::Band mapping::minimap(const FastaRecord& read,
 
             b = e + 1;
         }
+    }
+
+    std::cout << "band len: " << max_band_lenght << std::endl;
+
+    if (max_band_lenght < MIN_BAND_LENGHT_DEFAULT) {
+        return mapping::Band();
     }
 
     return mapping::Band(max_set_begin, max_set_end);
