@@ -10,8 +10,6 @@
 #define W_DEFAULT   12
 #define K_DEFAULT   12
 
-// static void print_mutations(const SmithWaterman::MutationsTupleVector& mutations, std::ostream& out);
-
 int main() {
 
     // init config
@@ -71,11 +69,10 @@ int main() {
         for (auto mutaion: mutations) {
             all_mutations[mutaion]++;
         }
-        // print_mutations(mutations, output_file);
     }
 
     for(auto mut : all_mutations) {
-        if (mut.second < 8) {
+        if (mut.second < 9) {
             continue;
         }
         output_file << std::get<0>(mut.first) << ",";
@@ -87,11 +84,3 @@ int main() {
 
     output_file.close();
 }
-
-// static void print_mutations(const SmithWaterman::MutationsTupleVector& mutations, std::ostream& out) {
-//     for(auto mut : mutations) {
-//         out << std::get<0>(mut) << ",";
-//         out << std::get<1>(mut) << ",";
-//         out << std::get<2>(mut) << std::endl;
-//     }
-// }
