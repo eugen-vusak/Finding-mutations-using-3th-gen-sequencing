@@ -63,7 +63,7 @@ int main() {
 
         // alignment
         SmithWaterman::MutationsTupleVector mutations;
-        alignment::completeAlign(read, reference, band, mutations);
+        alignment::partialAlign(read, reference, band, mutations);
 
         // update all_muttations counter
         for (auto mutaion: mutations) {
