@@ -27,7 +27,7 @@ private:
      * @brief struct that represents a cell in similarity matrix
      */
     typedef struct {
-        uint32_t score;
+        int32_t score;
         int8_t parent;
     } Cell;
 
