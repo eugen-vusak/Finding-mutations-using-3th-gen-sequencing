@@ -88,6 +88,8 @@ inline void SmithWaterman::updateCell(int (&opt)[3], uint32_t i, uint32_t j) {
     //     opt[INSERT] = matrix_[i][j - 1].score + penalty;
     //     opt[DELETE] = matrix_[i - 1][j].score + penalty;
     // } else {
+
+
     opt[MATCH] = matrix_[i - 1][j - 1].score + match(source_[i],target_[j]);
     opt[INSERT] = matrix_[i][j - 1].score - 4;
     opt[DELETE] = matrix_[i - 1][j].score - 4;
@@ -183,18 +185,30 @@ void SmithWaterman::calcMatrixBandTargetLarger() {
     uint32_t source_size = static_cast<uint32_t>(source_.size());
     uint32_t target_size = static_cast<uint32_t>(target_.size());
 
+    uint32_t a = band_width_ + 1;
+    uint32_t b = source_size - band_width_ - 1;
+
+    uint32_t s;
+    uint32_t e;
+
+    if (a < b) {
+        s = a;
+        e = b;
+    } else {
+        s = b;
+        e = a;
+    }
+
     uint32_t i = 1;
-    for (; i <= band_width_; i++) {
+    for (; i < s; i++) {
         uint32_t j_end = i + (target_size - source_size) + band_width_;
         for (uint32_t j = 1; j < j_end; j++) {
             updateCell(opt, i, j);
         }
     }
 
-    for (; i < source_size - band_width_; i++) {
-
-        uint32_t j_end = i + (target_size - source_size) + band_width_;
-        for (uint32_t j = i - band_width_; j < j_end; j++) {
+    for (; i <= e; i++) {
+        for (uint32_t j = 1; j < target_size; j++) {
             updateCell(opt, i, j);
         }
     }
